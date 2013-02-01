@@ -124,9 +124,105 @@ OrderController orders[] = new OrderController[imageButtons.length];
 		return true;
 	}
 
-	private void searchDir(int idx2) {
-		// TODO 自動生成されたメソッド・スタブ
+	private void searchDir(int idx) {
+		boolean searchUp 		= true;
+		boolean searchDown 		= true;
+		boolean searchRight 	= true;
+		boolean searchLeft 		= true;
 
+
+		if(idx < 4)	      searchUp	 	= false;
+		if(idx > 11)      searchDown 	= false;
+		if((idx % 4) == 0)searchRight 	= false;
+		if((idx % 4) == 3)searchLeft 	= false;
+
+		if(searchUp 	&& searchUp(idx))	return;
+		if(searchDown 	&& searchDown(idx))	return;
+		if(searchRight	&& searchRight(idx))return;
+		if(searchLeft 	&& searchLeft(idx))	return;
+	}
+
+	private boolean searchUp(int idx) {
+		int distance = 0;
+		for(int i = idx - 4; i > -1; i -= 4)
+		{
+			distance--;
+			if(orders[i].getImageRes() == R.drawable.blank)
+			{
+				swapUp(idx, distance);
+				return true;
+			}
+		}
+		return false;
+	}
+	private void swapUp(int idx, int distance) {
+		for(int i = idx + (distance * 4); i < idx; i +=4)
+		{
+			orders[i].swapImage(orders[i + 4]);
+		}
+	}
+	private boolean searchDown(int idx) {
+		int distance = 0;
+		for(int i = idx + 4; i < 16; i += 4)
+		{
+			distance++;
+			if(orders[i].getImageRes() == R.drawable.blank)
+			{
+				swapDown(idx, distance);
+				return true;
+			}
+		}
+		return false;
+	}
+	private void swapDown(int idx, int distance) {
+		for(int i = idx + (distance * 4); i > idx; i -=4)
+		{
+			orders[i].swapImage(orders[i - 4]);
+		}
+	}
+	private boolean searchRight(int idx) {
+		int distance = 0;
+		int min = 0;
+		min = idx - (idx % 4);
+		for(int i = idx - 1; i >= min; i--)
+		{
+			distance--;
+			if(orders[i].getImageRes() == R.drawable.blank)
+			{
+				swapLeft(idx, distance);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private void swapLeft(int idx, int distance) {
+		for(int i = idx + distance; i < idx; i++)
+		{
+			orders[i].swapImage(orders[i + 1]);
+		}
+	}
+	private boolean searchLeft(int idx) {
+		int distance = 0;
+		int max = 15;
+		max = (idx + 4) - (idx + 4) % 4;
+		for(int i = idx + 1; i < max; i++)
+		{
+			distance++;
+			if(orders[i].getImageRes() == R.drawable.blank)
+			{
+				swapRight(idx, distance);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private void swapRight(int idx, int distance) {
+		for(int i = idx + distance; i > idx; i--)
+		{
+			orders[i].swapImage(orders[i - 1]);
+		}
 	}
 
 	class OrderController implements OnClickListener {
@@ -144,6 +240,7 @@ OrderController orders[] = new OrderController[imageButtons.length];
 
 		public int setImageRes(int resid) {
 			int old = curImageID;
+			curImageID = resid;
 			imgBtn.setImageResource(resid);
 			return old;
 		}
@@ -162,11 +259,9 @@ OrderController orders[] = new OrderController[imageButtons.length];
 			if(isCompleted()){
 				complete();
 			}
-
 			//for debug 何かクリックされたら、完成画面を表示する
-			if(true)complete();
+			//if(true)complete();
 		}
-
 
 		public void swapImage(OrderController other) {
 			int Previous = other.setImageRes(curImageID);
