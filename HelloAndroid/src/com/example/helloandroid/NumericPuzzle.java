@@ -1,6 +1,8 @@
 package com.example.helloandroid;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.View;
@@ -72,29 +74,54 @@ OrderController orders[] = new OrderController[imageButtons.length];
 		chrono.setBase(SystemClock.elapsedRealtime());
 		chrono.start();
 	}
+	private long stopChronometer() {
+		Chronometer chrono = (Chronometer) findViewById(R.id.chronometer1);
+		chrono.stop();
+		return SystemClock.elapsedRealtime() - chrono.getBase();
+	}
 
 	private void setStartButtonListener(){
 		Button btn = (Button)findViewById(R.id.start_btn);
 
 		btn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v){
-				//startGame();
+				startGame();
 				startChronometer();
 			}
 		});
-
-
 	}
 
+	private void startGame() {
+		int size = numImages.length;
+		for(int i = 0; i < size - 2; i++)
+		{
+			int swap = (int) (Math.random() * (size - (i +1))) ;
+			orders[i].swapImage(orders[i + swap]);
+			gameStarted = true;
+		}
+	}
 
 	private void complete() {
-		// TODO 自動生成されたメソッド・スタブ
-
+		long msec = stopChronometer();
+		AlertDialog.Builder alertDlgBld = new AlertDialog.Builder(this);
+		alertDlgBld.setTitle(R.string.complete_title);
+		alertDlgBld.setMessage(msec / 1000 + "秒");
+		alertDlgBld.setPositiveButton(
+				R.string.complete_button,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+		alertDlgBld.show();
 	}
 
 	private boolean isCompleted() {
-		// TODO 自動生成されたメソッド・スタブ
-		return false;
+		if(!gameStarted)return false;
+		for(int i = 0; i <numImages.length; i++)
+			if(numImages[i] != orders[i].getImageRes())return false;
+		return true;
 	}
 
 	private void searchDir(int idx2) {
@@ -135,6 +162,9 @@ OrderController orders[] = new OrderController[imageButtons.length];
 			if(isCompleted()){
 				complete();
 			}
+
+			//for debug 何かクリックされたら、完成画面を表示する
+			if(true)complete();
 		}
 
 
