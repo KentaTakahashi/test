@@ -2,7 +2,8 @@
 <resources>
 
     <string name="app_name">MultiActivity</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world">FirstActivity</string>
     <string name="menu_settings">Settings</string>
+    <string name="next">next Activity</string>
 
 </resources>
