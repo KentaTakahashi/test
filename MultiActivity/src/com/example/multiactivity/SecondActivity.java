@@ -7,19 +7,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class FirstActivity extends Activity {
+public class SecondActivity extends Activity{
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		setContentView(R.layout.second);
 
-		Button btnNext = (Button) this.findViewById(R.id.button1);
+		Button btnNext = (Button) this.findViewById(R.id.button2);
 		btnNext.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				// TODO 自動生成されたメソッド・スタブ
-				Intent intent = new Intent(FirstActivity.this, SecondActivity.class);
+				Intent intent = new Intent(SecondActivity.this, FinalActivity.class);
 				startActivity(intent);
 			}
 		});

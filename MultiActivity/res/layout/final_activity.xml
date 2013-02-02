@@ -5,22 +5,22 @@
     android:gravity="center" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="153dp"
-        android:text="@string/hello_world"
+        android:text="@string/final_activity"
         android:textSize="@android:dimen/notification_large_icon_width" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/button3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
+        android:layout_below="@+id/textView3"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="36dp"
-        android:text="@string/next" />
+        android:text="@string/toFirst" />
 
 </RelativeLayout>

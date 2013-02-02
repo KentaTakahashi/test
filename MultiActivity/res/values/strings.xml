@@ -5,5 +5,8 @@
     <string name="hello_world">FirstActivity</string>
     <string name="menu_settings">Settings</string>
     <string name="next">next Activity</string>
+    <string name="second">Second Activity</string>
+    <string name="final_activity">Final Activity</string>
+    <string name="toFirst">first Activity</string>
 
 </resources>
