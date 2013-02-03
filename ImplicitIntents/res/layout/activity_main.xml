@@ -1,0 +1,54 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="fill_vertical"
+    tools:context=".MainActivity" >
+
+    <Button
+        android:id="@+id/mail"
+        style="@layout/activity_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/http"
+        android:layout_centerHorizontal="true"
+        android:text="mail" />
+
+    <Button
+        android:id="@+id/address"
+        style="@layout/activity_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mail"
+        android:layout_centerHorizontal="true"
+        android:text="address" />
+
+    <Button
+        android:id="@+id/gps"
+        style="@layout/activity_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/address"
+        android:layout_centerHorizontal="true"
+        android:text="gps" />
+
+    <Button
+        android:id="@+id/dial"
+        style="@layout/activity_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/gps"
+        android:layout_centerHorizontal="true"
+        android:text="dial" />
+
+    <Button
+        android:id="@+id/http"
+        style="@layout/activity_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/mail"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="106dp"
+        android:text="http" />
+
+</RelativeLayout>
