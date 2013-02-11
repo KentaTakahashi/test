@@ -4,5 +4,8 @@
     <string name="app_name">ServerCheck</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
+    <string name="connectBtn">接続</string>
+    <string name="result">接続結果をここに表示します</string>
+    <string name="input_def">サーバのアドレスを入力してください</string>
 
 </resources>
