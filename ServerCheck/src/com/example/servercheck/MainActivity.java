@@ -6,6 +6,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
 	private EditText edit02;
 	private EditText edit03;
 	private TextView resultText;
+	private int mStatus;
+	private String mURL;
+
+	private Handler mHandler = new Handler();//Handlerのインスタンス生成
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,28 +52,48 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		// TODO 自動生成されたメソッド・スタブ
 		String retStr = "";
 		if(!(DEF_HTTP.equals(edit01.getText().toString()))){
-			retStr =doGet(edit01.getText().toString());
-			resultText.setText(edit01.getText().toString() + " " + retStr);
+
+			doGet(edit01.getText().toString());
+			//resultText.setText(edit01.getText().toString() + " " + retStr);
 		}
 
 	}
 
-	public String doGet(String url) {
-		// TODO 自動生成されたメソッド・スタブ
-		try
-		{
-			DefaultHttpClient client = new DefaultHttpClient();
-			String urlTest = "http://www.google.co.jp/";
-			HttpGet method = new HttpGet(urlTest);
+	public void doGet(String url) {
 
-			HttpResponse response = client.execute(method);
-			int status = response.getStatusLine().getStatusCode();
-			return "Status:" + status;
-		}
-		catch(Exception e)
-		{
-			return "Error:" + e.getMessage();
-		}
+		mURL = url;
+		mURL = "";
+
+		//通信用サブスレッド作成
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				// TODO 自動生成されたメソッド・スタブ
+				try
+				{
+					DefaultHttpClient client = new DefaultHttpClient();
+					String urlTest = "http://www.google.co.jp/";
+					HttpGet method = new HttpGet(mURL);
+
+					HttpResponse response = client.execute(method);
+					mStatus = response.getStatusLine().getStatusCode();
+
+					mHandler.post(new Runnable() {
+
+						@Override
+						public void run() {
+							// TODO 自動生成されたメソッド・スタブ
+							resultText = (TextView) findViewById(R.id.TextView1);
+							resultText.setText(edit01.getText().toString() + " " + "Status:" + mStatus);
+						}
+					});
+				}
+				catch(Exception e)
+				{
+					resultText.setText(edit01.getText().toString() + " " + "Error:" + e.getMessage());
+				}
+			}
+		}).start();
 	}
 
 }
