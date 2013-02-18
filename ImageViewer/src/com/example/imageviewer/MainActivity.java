@@ -1,16 +1,17 @@
 package com.example.imageviewer;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -26,8 +27,9 @@ public class MainActivity extends Activity {
 	private int srcBitmapIndex = 0;
 	private ImageView imgView;
 
-	private List<String> dirList = new ArrayList<String>();      // ディレクトリ格納用
-	private List<String> imgList = new ArrayList<String>();   // 画像PATH格納用
+	private List<String> fileList = new ArrayList<String>();      // ファイル格納用
+	private List<Bitmap> imgList = new ArrayList<Bitmap>();   // 画像格納用
+	private List<Long> dateList = new ArrayList<Long>();
 
 	private int debugCount = 0;//debug code
 
@@ -39,14 +41,11 @@ public class MainActivity extends Activity {
 		//ビューオブジェクト取得
 		imgView = (ImageView) findViewById(R.id.imageView1);
 
-		//表示画像取得
-		Resources r0 = getResources();
-		srcBitmap[0] = BitmapFactory.decodeResource(r0, R.drawable.num01);
-		Resources r1 = getResources();
-		srcBitmap[1] = BitmapFactory.decodeResource(r1, R.drawable.num02);
-		Resources r2 = getResources();
-		srcBitmap[2] = BitmapFactory.decodeResource(r2, R.drawable.num03);
+		Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+		//Uri uri = MediaStore.Images.Media.INTERNAL_CONTENT_URI;
+		getImageData(uri);
 
+/*
 		// SDカードのFileを取得
 		File file = Environment.getExternalStorageDirectory();
 		dirList.add(file.getPath());
@@ -69,6 +68,7 @@ public class MainActivity extends Activity {
 		    }
 		    m++;
 		}
+		*/
 		//File f = new File(imgList.get(0));
 		//BitmapFactory.Options bmpOp = new BitmapFactory.Options();// オプション設定用のオブジェクト
 		//bmpOp.inJustDecodeBounds = true;// 実際の画像本体は読まずにサイズ情報のみ取得するフラグをセット
@@ -76,8 +76,64 @@ public class MainActivity extends Activity {
 		//BitmapFactory.decodeFile(f.getPath(), bmpOp);
 		//currentBitmap = BitmapFactory.decodeFile(f.getPath(), bmpOp);
 
-		currentBitmap = srcBitmap[0];
-		//imgView.setImageBitmap(currentBitmap);
+		currentBitmap = imgList.get(1);
+		imgView.setImageBitmap(currentBitmap);
+	}
+
+
+	private void getImageData(Uri uri) {
+		// TODO 自動生成されたメソッド・スタブ
+		if(false){//debug code 簡易的にリソース画像を読み込み
+			//表示画像取得
+			Bitmap tmpBitmap;
+			Resources r0 = getResources();
+			tmpBitmap = BitmapFactory.decodeResource(r0, R.drawable.num01);
+			imgList.add(tmpBitmap);
+			Resources r1 = getResources();
+			tmpBitmap = BitmapFactory.decodeResource(r1, R.drawable.num02);
+			imgList.add(tmpBitmap);
+			Resources r2 = getResources();
+			tmpBitmap = BitmapFactory.decodeResource(r2, R.drawable.num03);
+			imgList.add(tmpBitmap);
+			return;
+		}
+
+		Cursor cur = this.managedQuery(uri, null, null, null, null);
+
+		cur.moveToFirst();
+		Log.d("GetImageEvent", "start");
+		for(int i = 0; i < cur.getCount(); i++){
+			String path = cur.getString(cur.getColumnIndexOrThrow("_data"));
+			imgList.add(file2bmp(path, 300, 300));
+			Log.d("GetImageEvent", "i = :" + Integer.toString(i));
+
+			cur.moveToNext();//インクリメント
+		}
+
+	}
+
+	private Bitmap file2bmp(String path, int maxW, int maxH) {
+		// TODO 自動生成されたメソッド・スタブ
+		BitmapFactory.Options opt;
+		try{
+			//画像サイズの取得
+			opt = new BitmapFactory.Options();
+			opt.inJustDecodeBounds = true;//デコードせずに、ファイルサイズを取得させるためのフラグ
+
+			BitmapFactory.decodeFile(path, opt);
+			int scaleW = opt.outWidth  / maxW + 1;
+			int scaleH = opt.outHeight / maxH + 1;
+			int scale  = Math.max(scaleW, scaleH);
+
+			//画像の読み込み
+			opt = new BitmapFactory.Options();
+			opt.inJustDecodeBounds = false;
+			opt.inSampleSize = scale;//サンプリングサイズを設定
+			Bitmap bmp = BitmapFactory.decodeFile(path, opt);
+			return bmp;
+		}catch(Exception e){
+			return null;
+		}
 	}
 
 
@@ -143,10 +199,10 @@ public class MainActivity extends Activity {
 
 	private void nextView() {
 		// TODO 自動生成されたメソッド・スタブ
-		//テスト用に適当に実装
+
 		srcBitmapIndex++;
-		srcBitmapIndex %= 3;
-		currentBitmap = srcBitmap[srcBitmapIndex];
+		srcBitmapIndex %= imgList.size();
+		currentBitmap = imgList.get(srcBitmapIndex);
 	}
 
 
