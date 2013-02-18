@@ -1,11 +1,16 @@
 package com.example.imageviewer;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -20,6 +25,9 @@ public class MainActivity extends Activity {
 	private Bitmap srcBitmap[] = new Bitmap[3];
 	private int srcBitmapIndex = 0;
 	private ImageView imgView;
+
+	private List<String> dirList = new ArrayList<String>();      // ディレクトリ格納用
+	private List<String> imgList = new ArrayList<String>();   // 画像PATH格納用
 
 	private int debugCount = 0;//debug code
 
@@ -39,8 +47,37 @@ public class MainActivity extends Activity {
 		Resources r2 = getResources();
 		srcBitmap[2] = BitmapFactory.decodeResource(r2, R.drawable.num03);
 
+		// SDカードのFileを取得
+		File file = Environment.getExternalStorageDirectory();
+		dirList.add(file.getPath());
+
+		// SDカード内のファイルを検索。
+		int m = 0;
+		int n = 0;
+		while(dirList.size() > m){
+		    File subDir = new File(dirList.get(m));
+		    String subFileName[] = subDir.list();
+		    n = 0;
+		    while(subFileName.length > n){
+		        File subFile = new File(subDir.getPath() + "/" + subFileName[n]);
+		        if(subFile.isDirectory()){
+		            dirList.add(subDir.getPath() + "/" + subFileName[n]);
+		        }else if(subFile.getName().endsWith("jpg") || subFile.getName().endsWith("JPG")){
+		            imgList.add(subDir.getPath() + "/" + subFileName[n]);
+		        }
+		        n++;
+		    }
+		    m++;
+		}
+		//File f = new File(imgList.get(0));
+		//BitmapFactory.Options bmpOp = new BitmapFactory.Options();// オプション設定用のオブジェクト
+		//bmpOp.inJustDecodeBounds = true;// 実際の画像本体は読まずにサイズ情報のみ取得するフラグをセット
+		//bmpOp.inSampleSize = 10;
+		//BitmapFactory.decodeFile(f.getPath(), bmpOp);
+		//currentBitmap = BitmapFactory.decodeFile(f.getPath(), bmpOp);
+
 		currentBitmap = srcBitmap[0];
-		imgView.setImageBitmap(currentBitmap);
+		//imgView.setImageBitmap(currentBitmap);
 	}
 
 
