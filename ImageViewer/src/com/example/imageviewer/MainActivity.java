@@ -45,41 +45,9 @@ public class MainActivity extends Activity {
 		//Uri uri = MediaStore.Images.Media.INTERNAL_CONTENT_URI;
 		getImageData(uri);
 
-/*
-		// SDカードのFileを取得
-		File file = Environment.getExternalStorageDirectory();
-		dirList.add(file.getPath());
-
-		// SDカード内のファイルを検索。
-		int m = 0;
-		int n = 0;
-		while(dirList.size() > m){
-		    File subDir = new File(dirList.get(m));
-		    String subFileName[] = subDir.list();
-		    n = 0;
-		    while(subFileName.length > n){
-		        File subFile = new File(subDir.getPath() + "/" + subFileName[n]);
-		        if(subFile.isDirectory()){
-		            dirList.add(subDir.getPath() + "/" + subFileName[n]);
-		        }else if(subFile.getName().endsWith("jpg") || subFile.getName().endsWith("JPG")){
-		            imgList.add(subDir.getPath() + "/" + subFileName[n]);
-		        }
-		        n++;
-		    }
-		    m++;
-		}
-		*/
-		//File f = new File(imgList.get(0));
-		//BitmapFactory.Options bmpOp = new BitmapFactory.Options();// オプション設定用のオブジェクト
-		//bmpOp.inJustDecodeBounds = true;// 実際の画像本体は読まずにサイズ情報のみ取得するフラグをセット
-		//bmpOp.inSampleSize = 10;
-		//BitmapFactory.decodeFile(f.getPath(), bmpOp);
-		//currentBitmap = BitmapFactory.decodeFile(f.getPath(), bmpOp);
-
 		currentBitmap = imgList.get(1);
 		imgView.setImageBitmap(currentBitmap);
 	}
-
 
 	private void getImageData(Uri uri) {
 		// TODO 自動生成されたメソッド・スタブ
@@ -104,7 +72,7 @@ public class MainActivity extends Activity {
 		Log.d("GetImageEvent", "start");
 		for(int i = 0; i < cur.getCount(); i++){
 			String path = cur.getString(cur.getColumnIndexOrThrow("_data"));
-			imgList.add(file2bmp(path, 300, 300));
+			imgList.add(file2bmp(path, 480, 480));
 			Log.d("GetImageEvent", "i = :" + Integer.toString(i));
 
 			cur.moveToNext();//インクリメント
