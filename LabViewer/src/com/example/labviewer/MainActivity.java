@@ -1,16 +1,25 @@
 package com.example.labviewer;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.Menu;
 
 public class MainActivity extends Activity {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-	}
+	MyGLView myGLView;
+
+	  @Override
+	  public void onCreate(Bundle savedInstanceState) {
+	    super.onCreate(savedInstanceState);
+	    myGLView = new MyGLView(this);
+	    setContentView(myGLView);
+	  }
+
+	  @Override
+	  protected void onResume(){
+	    super.onResume();
+	    myGLView.onResume();
+	  }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
