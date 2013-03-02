@@ -23,7 +23,7 @@ public class MyRenderer implements Renderer {
     private float coordX = 0.0f, coordY =1.0f, coordZ = 0.0f;
 
     // Camera 位置座標
-    private float eyeX = 0.0f, eyeY = 0.0f, eyeZ = 3.0f;
+    private float eyeX = 0.0f, eyeY = 0.5f, eyeZ = 2.0f;
 
 	MyCube myCube = new MyCube();
 	MyJpcColor myJpcColor  = new MyJpcColor();
@@ -45,10 +45,10 @@ public class MyRenderer implements Renderer {
 		GLU.gluPerspective(gl, fovY, aspect, zNear, zFar);
 		// Camera loock at Params
 		float centerX = 0;
-		float centerY = 0;
+		float centerY = 0.5f;
 		float centerZ = 0;
 		float upX = 0;
-		float upY = 1;
+		float upY = 1;//y軸が上になるよう設定
 		float upZ = 0;
 		GLU.gluLookAt(gl, eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
 
@@ -125,7 +125,7 @@ public class MyRenderer implements Renderer {
 
 	public void addRotateY(float paramFloat1) {
 		// TODO 自動生成されたメソッド・スタブ
-		this.rotateY += paramFloat1;
+		this.rotateY -= paramFloat1;
 	}
 
 	public void changeCameraPositionByZ(float scaleFactor) {
@@ -134,7 +134,7 @@ public class MyRenderer implements Renderer {
 		z = z / scaleFactor;
 		// リニアクリップより小さくならないようにする。
 		//z = Math.max(z, zNear);
-		z = Math.max(z, zNear * 2);//対象が見切れないよう修正
+		z = Math.max(z, zNear * 2);//対象が見切れないよう
 		// ファーアクリップより大きくならないようにする。
 		z = Math.min(z, zFar);
 		eyeZ = z;
