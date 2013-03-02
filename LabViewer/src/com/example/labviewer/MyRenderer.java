@@ -8,6 +8,23 @@ import android.opengl.GLU;
 
 public class MyRenderer implements Renderer {
 
+	private float mWidth;
+    private float mHeight;
+    private float zNear =1.0f;
+    private float zFar = 1000.0f;
+
+    // 移動方向のベクトル成分
+    private float posX = 0.0f, posY = 0.0f, posZ = 0.0f;
+
+    // 回転の角度(degree)
+    private float rotateX = 0.0f, rotateY = 1.0f, rotateZ = 0.0f;
+
+    //回転軸のベクターの各座標
+    private float coordX = 0.0f, coordY =1.0f, coordZ = 0.0f;
+
+    // Camera 位置座標
+    private float eyeX = 0.0f, eyeY = 0.0f, eyeZ = 3.0f;
+
 	MyCube myCube = new MyCube();
 	MyJpcColor myJpcColor  = new MyJpcColor();
 
@@ -18,20 +35,37 @@ public class MyRenderer implements Renderer {
 	public void onDrawFrame(GL10 gl) {
 		// TODO 自動生成されたメソッド・スタブ
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-
-		gl.glMatrixMode(GL10.GL_MODELVIEW);
+		gl.glMatrixMode(GL10.GL_PROJECTION);
 		gl.glLoadIdentity();
-		gl.glTranslatef(0, 0, -3f);
+
+		 // カメラの設定
+		// Camera Perstective Params
+		float fovY = 45.0f;
+		float aspect = (float) mWidth / (float) mHeight;
+		GLU.gluPerspective(gl, fovY, aspect, zNear, zFar);
+		// Camera loock at Params
+		float centerX = 0;
+		float centerY = 0;
+		float centerZ = 0;
+		float upX = 0;
+		float upY = 1;
+		float upZ = 0;
+		GLU.gluLookAt(gl, eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
+
+
 
 		//ライティングを有効化
 	    //gl.glEnable(GL10.GL_LIGHTING);
 	    //gl.glEnable(GL10.GL_LIGHT0);
 
 		//Frameを回転
-		gl.glRotatef(30f, 1, 1, 0);
+		//gl.glRotatef(30f, 1, 1, 0);
 	    //gl.glRotatef(30f, 1, 0, 0);
+		// 回転の角度と回転軸を指定する。
+        // とりあえず，Y軸で回転させる
+        gl.glRotatef(rotateY, coordX, coordY, coordZ);
 
-		//myCube.draw(gl);
+        //myCube.draw(gl);
 		myJpcColor.draw(gl);
 		//mTriangle.draw(gl);
 
@@ -41,12 +75,15 @@ public class MyRenderer implements Renderer {
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
 		// TODO 自動生成されたメソッド・スタブ
 
+		mWidth = (float)width;
+        mHeight = (float)height;
+
 		//デバイスのサイズや縦横の向きが変わったとき,それに合わせて、フラスタムとビューポートを表示が歪まないように設定
 		gl.glViewport(0, 0, width, height);
 
 	    gl.glMatrixMode(GL10.GL_PROJECTION);
 	    gl.glLoadIdentity();
-	    GLU.gluPerspective(gl, 45f,(float) width / height, 1f, 50f);
+	    GLU.gluPerspective(gl, 45f,(float) mWidth / mHeight, 1f, 50f);
 
 	}
 
@@ -79,10 +116,28 @@ public class MyRenderer implements Renderer {
 	    */
 	    gl.glDisable(GL10.GL_DITHER);
 	    // 背景色
-	    gl.glClearColor(1,1,1,1);
+	    gl.glClearColor(0,0,0,1);
 	    //スムースシェーディング：平面のポリゴンを曲面に見せかける処理。
 	    gl.glShadeModel(GL10.GL_SMOOTH);
 
+
+	}
+
+	public void addRotateY(float paramFloat1) {
+		// TODO 自動生成されたメソッド・スタブ
+		this.rotateY += paramFloat1;
+	}
+
+	public void changeCameraPositionByZ(float scaleFactor) {
+		// TODO 自動生成されたメソッド・スタブ
+		float z = eyeZ;
+		z = z / scaleFactor;
+		// リニアクリップより小さくならないようにする。
+		//z = Math.max(z, zNear);
+		z = Math.max(z, zNear * 2);//対象が見切れないよう修正
+		// ファーアクリップより大きくならないようにする。
+		z = Math.min(z, zFar);
+		eyeZ = z;
 
 	}
 

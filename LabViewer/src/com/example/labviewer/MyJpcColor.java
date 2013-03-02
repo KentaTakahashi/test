@@ -17,6 +17,7 @@ public class MyJpcColor {
 		float vertices[] = {
 
 				//a→X, L→Y, b→Z の対応となるので要注意!
+				//ref doc/JAPAN COLOR.pdf
 
 				// ハイライト側の6角推
 				0.005f, 0.93f * 2.0f - 1.0f, 	0.004f,	// W 白のみJPC2007に記載が無かったため決めうち
