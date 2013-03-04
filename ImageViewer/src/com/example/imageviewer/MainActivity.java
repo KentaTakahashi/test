@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -38,6 +40,15 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		// 現在の画面の向きを取得するために設定を取得
+		Configuration config = getResources().getConfiguration();
+		if (config.orientation == Configuration.ORIENTATION_PORTRAIT) {
+		    // 縦固定
+		    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		} else if(config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+		    // 横固定
+		    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		}
 		//ビューオブジェクト取得
 		imgView = (ImageView) findViewById(R.id.imageView1);
 
@@ -220,6 +231,19 @@ public class MainActivity extends Activity {
 		//return 1;//debug code
 	}
 
+
+
+	@Override
+	protected void onDestroy() {
+		// TODO 自動生成されたメソッド・スタブ
+		Log.d("LifeCycle", "called onDestroy");
+		super.onDestroy();
+	}
+
+	@Override
+    public void onConfigurationChanged(Configuration newConfig) {
+    	super.onConfigurationChanged(newConfig);
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
