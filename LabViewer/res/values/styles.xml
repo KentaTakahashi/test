@@ -1,4 +1,8 @@
 <resources>
+    <drawable name="translucent_background">#44FF0000</drawable>
+    <style name="Theme.MyTrans" parent="android:style/Theme.Translucent">
+        <item name="android:windowBackground">@drawable/translucent_background</item>
+    </style>
 
     <!--
         Base application theme, dependent on API level. This theme is replaced

@@ -58,8 +58,13 @@ public class MainActivity extends Activity {
 		imgGallery.setAdapter(new GalleryAdpter(this));
 		imgGallery.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+			public void onItemClick(AdapterView<?> adapView, View view, int position, long id) {
 				// TODO 自動生成されたメソッド・スタブ
+				if(adapView == imgGallery){
+					srcBitmapIndex = position;
+					currentBitmap = imgList.get(srcBitmapIndex);
+					imgView.setImageBitmap(currentBitmap);
+				}
 			}
 		});
 
@@ -231,7 +236,7 @@ public class MainActivity extends Activity {
 			if(convertView == null){
 				Log.d("convertView cheak", "convertView == null");
 				i = new ImageView(context);
-				i.setLayoutParams(new Gallery.LayoutParams(200, 200));
+				i.setLayoutParams(new Gallery.LayoutParams(300, 300));
 				i.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 
 				BitmapDrawable bd = new BitmapDrawable(imgList.get(position));
