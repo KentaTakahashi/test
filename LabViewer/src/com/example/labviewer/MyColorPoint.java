@@ -1,5 +1,7 @@
 package com.example.labviewer;
 
+import javax.microedition.khronos.opengles.GL10;
+
 public class MyColorPoint {
 
 	//座標系
@@ -10,6 +12,10 @@ public class MyColorPoint {
 	public enum ColorSpace{
 		sRGB, Adobe_RGB, CIE_RGB
 	}
+	//描画タイプ
+	public enum DrawType{
+		Cube, Triangle, Sphere
+	}
 
 	float mCordR, mCordG, mCordB;//RGB座標系上でのMyColorPointの座標
 	float mCordX, mCordY, mCordZ;//XYZ座標系上でのMyColorPointの座標
@@ -18,6 +24,7 @@ public class MyColorPoint {
 	float mCordXn, mCordYn, mCordZn;//基準となっているホワイトポイントの CIE XYZ での三刺激値である（添え字の n は "normalized" の意）。
 
 	private ColorSpace mColorSpace;
+	private DrawType mDrawType;
 
 	//コンストラクタ
 	public MyColorPoint(ColorCoordinate colorcoordinate, float i, float j, float k, ColorSpace colorspace){
@@ -34,6 +41,8 @@ public class MyColorPoint {
 		}else if(colorcoordinate == ColorCoordinate.Lab){
 			initLabmode(i, j, k);
 		}
+		//描画タイプをデフォルトで正六面体とする
+		setDrawType(DrawType.Cube);
 	}
 
 	//コンストラクタのオーバーライド、colorspaceはデフォルト値はsRGB
@@ -162,6 +171,14 @@ public class MyColorPoint {
 		}else{
 			mCordY = (float) ((fz - (16 / 116)) * 3 * Math.pow(delta, 2) * mCordZn);
 		}
+
+	}
+
+	public void setDrawType(DrawType Drawtype){
+		mDrawType = Drawtype;
+	}
+
+	public void draw(GL10 gl){
 
 	}
 

@@ -25,8 +25,10 @@ public class MyRenderer implements Renderer {
     // Camera 位置座標
     private float eyeX = 0.0f, eyeY = 0.5f, eyeZ = 2.0f;
 
-	MyCube myCube = new MyCube();
-	MyJpcColor myJpcColor  = new MyJpcColor();
+	//MyCube myCube = new MyCube(0.0f, 0.0f, 0.0f, 0.5f);
+    MyCube myCube = new MyCube(0.0f, 0.0f, 0.0f, 0.5f, 50f, 50f, 50f);
+
+    MyJpcColor myJpcColor  = new MyJpcColor();
 
 	private int size = 0x10000;
 	Triangle mTriangle  = new Triangle(0, size);
@@ -65,8 +67,8 @@ public class MyRenderer implements Renderer {
         // とりあえず，Y軸で回転させる
         gl.glRotatef(rotateY, coordX, coordY, coordZ);
 
-        //myCube.draw(gl);
-		myJpcColor.draw(gl);
+        myCube.draw(gl);
+		//myJpcColor.draw(gl);
 		//mTriangle.draw(gl);
 
 	}
