@@ -19,52 +19,56 @@ public class MyCube extends MyDrawObject{
 
 	  int one = 0x10000;
 
-	  int mid_r  = (int)(one / 100 * r);
-	  int mid_g  = (int)(one / 100 * g);
-	  int mid_b  = (int)(one / 100 * b);
-	  int high_r = (int)(one / 100 * Math.min(100, r + 10));
-	  int high_g = (int)(one / 100 * Math.min(100, g + 10));
-	  int high_b = (int)(one / 100 * Math.min(100, b + 10));
-	  int low_r  = (int)(one / 100 * Math.max(0, r - 10));
-	  int low_g  = (int)(one / 100 * Math.max(0, g - 10));
-	  int low_b  = (int)(one / 100 * Math.max(0, b - 10));
+	  //明るさを4段階に振り分け、グラデーションをつける
+	  int h1_r = (int)(one / 100 * Math.min(100, r + 10));
+	  int h1_g = (int)(one / 100 * Math.min(100, g + 10));
+	  int h1_b = (int)(one / 100 * Math.min(100, b + 10));
+	  int h2_r = (int)(one / 100 * Math.min(100, r + 2));
+	  int h2_g = (int)(one / 100 * Math.min(100, g + 2));
+	  int h2_b = (int)(one / 100 * Math.min(100, b + 2));
+	  int h3_r = (int)(one / 100 * Math.max(0, r - 2));
+	  int h3_g = (int)(one / 100 * Math.max(0, g - 2));
+	  int h3_b = (int)(one / 100 * Math.max(0, b - 2));
+	  int h4_r = (int)(one / 100 * Math.max(0, r - 10));
+	  int h4_g = (int)(one / 100 * Math.max(0, g - 10));
+	  int h4_b = (int)(one / 100 * Math.max(0, b - 10));
 
 	  int colors[] = {
 			  // Front
-			  low_r,		low_g,		low_b,		one,
-			  mid_r,		mid_g,		mid_b,		one,
-			  mid_r,		mid_g,		mid_b,		one,
-			  mid_r,		mid_g,		mid_b,		one,
+			  h4_r,		h4_g,		h4_b,		one,
+			  h3_r,		h3_g,		h3_b,		one,
+			  h3_r,		h3_g,		h3_b,		one,
+			  h2_r,		h2_g,		h2_b,		one,
 
 			  // Back
-			  mid_r,		mid_g,		mid_b,		one,
-			  mid_r,		mid_g,		mid_b,		one,
-			  mid_r,		mid_g,		mid_b,		one,
-			  mid_r,		mid_g,		mid_b,		one,
+			  h3_r,		h3_g,		h3_b,		one,
+			  h2_r,		h2_g,		h2_b,		one,
+			  h2_r,		h2_g,		h2_b,		one,
+			  h1_r,		h1_g,		h1_b,		one,
 
 			  // Left
-			  mid_r,		mid_g,		mid_b,		one,
-			  mid_r,		mid_g,		mid_b,		one,
-			  mid_r,		mid_g,		mid_b,		one,
-			  mid_r,		mid_g,		mid_b,		one,
+			  h4_r,		h4_g,		h4_b,		one,
+			  h3_r,		h3_g,		h3_b,		one,
+			  h3_r,		h3_g,		h3_b,		one,
+			  h2_r,		h2_g,		h2_b,		one,
 
 			  // Right
-			  mid_r,		mid_g,		mid_b,		one,
-			  mid_r,		mid_g,		mid_b,		one,
-			  mid_r,		mid_g,		mid_b,		one,
-			  mid_r,		mid_g,		mid_b,		one,
+			  h3_r,		h3_g,		h3_b,		one,
+			  h2_r,		h2_g,		h2_b,		one,
+			  h2_r,		h2_g,		h2_b,		one,
+			  h1_r,		h1_g,		h1_b,		one,
 
 			  // Top
-			  mid_r,		mid_g,		mid_b,		one,
-			  mid_r,		mid_g,		mid_b,		one,
-			  mid_r,		mid_g,		mid_b,		one,
-			  mid_r,		mid_g,		mid_b,		one,
+			  h3_r,		h3_g,		h3_b,		one,
+			  h2_r,		h2_g,		h2_b,		one,
+			  h2_r,		h2_g,		h2_b,		one,
+			  h1_r,		h1_g,		h1_b,		one,
 
 			  // Bottom
-			  mid_r,		mid_g,		mid_b,		one,
-			  mid_r,		mid_g,		mid_b,		one,
-			  mid_r,		mid_g,		mid_b,		one,
-			  mid_r,		mid_g,		mid_b,		one,
+			  h4_r,		h4_g,		h4_b,		one,
+			  h3_r,		h3_g,		h3_b,		one,
+			  h3_r,		h3_g,		h3_b,		one,
+			  h2_r,		h2_g,		h2_b,		one,
 		};
 		ByteBuffer vbb2 = ByteBuffer.allocateDirect(colors.length * 4);
 		vbb2.order(ByteOrder.nativeOrder());

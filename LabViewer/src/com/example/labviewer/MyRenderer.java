@@ -26,9 +26,11 @@ public class MyRenderer implements Renderer {
     private float eyeX = 0.0f, eyeY = 0.5f, eyeZ = 2.0f;
 
 	//MyCube myCube = new MyCube(0.0f, 0.0f, 0.0f, 0.5f);
-    MyCube myCube = new MyCube(0.0f, 0.0f, 0.0f, 0.5f, 50f, 50f, 50f);
-
+    MyCube myCube = new MyCube(0.0f, 0.0f, 0.0f, 0.5f, 70f, 70f, 00f);
+    MyCube myCube2 = new MyCube(0.5f, 0.0f, 0.0f, 0.5f, 00f, 70f, 70f);
     MyJpcColor myJpcColor  = new MyJpcColor();
+
+    MyColorPointGenerator myColorPointGenerator = new MyColorPointGenerator();
 
 	private int size = 0x10000;
 	Triangle mTriangle  = new Triangle(0, size);
@@ -67,9 +69,12 @@ public class MyRenderer implements Renderer {
         // とりあえず，Y軸で回転させる
         gl.glRotatef(rotateY, coordX, coordY, coordZ);
 
-        myCube.draw(gl);
+        //myCube.draw(gl);
+        //myCube2.draw(gl);
 		//myJpcColor.draw(gl);
 		//mTriangle.draw(gl);
+
+        myColorPointGenerator.draw(gl);
 
 	}
 
@@ -92,6 +97,12 @@ public class MyRenderer implements Renderer {
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 		// TODO 自動生成されたメソッド・スタブ
+		//アルファチャンネル機能(色設定時の透明度)ON
+		gl.glEnable(GL10.GL_ALPHA_TEST);
+		//下の色と上に書いた物の色の合成機能ON
+		gl.glEnable(GL10.GL_BLEND);
+		//上記の色合成ルール設定
+		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		//デプステストを有効。3D描画時に利用。デプスバッファが浅いものが上に表示される。
 		gl.glEnable(GL10.GL_DEPTH_TEST);
 	    gl.glDepthFunc(GL10.GL_LEQUAL);

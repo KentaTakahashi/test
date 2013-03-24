@@ -8,14 +8,14 @@ abstract class MyDrawObject {
 	protected float centerX;
 	protected float centerY;
 	protected float centerZ;
-	protected float drowSize;
+	protected float drawSize;
 
 	//コンストラクタ
 	public MyDrawObject(float x, float y, float z, float size){
 		centerX = x;
 		centerY = y;
 		centerZ = z;
-		drowSize = size;
+		drawSize = size;
 	}
 
 	//描画する抽象メソッド
