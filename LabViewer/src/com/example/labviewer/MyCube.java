@@ -8,7 +8,7 @@ import java.nio.IntBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
-public class MyCube extends MyDrawObject{
+public class MyCube implements  MyDrawObject{
 
   private FloatBuffer mVertexBuffer;
   private IntBuffer mColorBuffer;
@@ -79,7 +79,6 @@ public class MyCube extends MyDrawObject{
   }
 
   public MyCube(float x, float y, float z, float size){
-	  super(x, y, z, size);
 
 	  float vertices[] = {
 			  // Front

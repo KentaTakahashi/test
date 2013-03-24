@@ -129,7 +129,8 @@ public class MyRenderer implements Renderer {
 	    */
 	    gl.glDisable(GL10.GL_DITHER);
 	    // 背景色
-	    gl.glClearColor(0,0,0,1);
+	    //gl.glClearColor(0,0,0,1);//背景白
+	    gl.glClearColor(1,1,1,1);//背景黒
 	    //スムースシェーディング：平面のポリゴンを曲面に見せかける処理。
 	    gl.glShadeModel(GL10.GL_SMOOTH);
 

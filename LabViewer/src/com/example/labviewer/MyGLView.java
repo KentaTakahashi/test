@@ -2,6 +2,7 @@ package com.example.labviewer;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
+import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
@@ -25,6 +26,13 @@ public class MyGLView extends GLSurfaceView {
 
         // タッチ操作によるカメラ位置の変更ためのクラスのインスタンスを追加する。
         mScaleGestureDetector = new ScaleGestureDetector(context, new MyScaleGestureListener());
+	}
+	/**
+	 * XMLより呼び出す際のコンストラクタ
+	 * @param context, attrs
+	 */
+	public MyGLView(Context context, AttributeSet attrs){
+		this(context);
 	}
 
 	@Override

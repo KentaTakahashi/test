@@ -4,5 +4,8 @@
     <string name="app_name">LabViewer</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="rgb">RGB</string>
+    <string name="xyz">XYZ</string>
+    <string name="lab">L*a*b*</string>
 
 </resources>

@@ -2,7 +2,7 @@ package com.example.labviewer;
 
 import javax.microedition.khronos.opengles.GL10;
 
-public class MyColorPoint {
+public class MyColorPoint implements MyDrawObject{
 
 	//座標系
 	public enum ColorCoordinate{
@@ -16,6 +16,8 @@ public class MyColorPoint {
 	public enum DrawType{
 		Cube, Triangle, Sphere
 	}
+
+	private MyDrawObject mObject;
 
 	float mCordR, mCordG, mCordB;//RGB座標系上でのMyColorPointの座標
 	float mCordX, mCordY, mCordZ;//XYZ座標系上でのMyColorPointの座標
@@ -43,6 +45,17 @@ public class MyColorPoint {
 		}
 		//描画タイプをデフォルトで正六面体とする
 		setDrawType(DrawType.Cube);
+		initDrawObject();
+	}
+
+	private void initDrawObject() {
+		// TODO 自動生成されたメソッド・スタブ
+		if(mDrawType == DrawType.Cube){
+			//mObject = new MyCube(mCordR, mCordG, mCordB, 0.02f, mCordR * 100, mCordG * 100, mCordB * 100);
+			//mObject = new MyCube(mCordX, mCordY, mCordZ, 0.02f, mCordR * 100, mCordG * 100, mCordB * 100);
+			mObject = new MyCube(mCorda/ 100, mCordL / 100, - mCordb/ 100, 0.02f, mCordR * 100, mCordG * 100, mCordB * 100);
+			//mObject = new MyCube(0, 0, 0, 0.5f, 50, 50, 50);//debug
+		}
 	}
 
 	//コンストラクタのオーバーライド、colorspaceはデフォルト値はsRGB
@@ -51,6 +64,14 @@ public class MyColorPoint {
 	}
 
 	//コンストラクタ内で呼ばれる初期化関数
+	private void initRGBmode(float r, float g, float b) {
+		mCordR = r;
+		mCordG = g;
+		mCordB = b;
+
+		convRGBtoXYZ(mCordR, mCordG, mCordB);
+		convXYZtoLab(mCordX, mCordY, mCordZ);
+	}
 	private void initXYZmode(float x, float y, float z) {
 		mCordX = x;
 		mCordY = y;
@@ -59,17 +80,7 @@ public class MyColorPoint {
 		invXYZtoRGB(mCordX, mCordY, mCordZ);
 		convXYZtoLab(mCordX, mCordY, mCordZ);
 	}
-
-	private void initLabmode(float r, float g, float b) {
-		mCordR = r;
-		mCordG = g;
-		mCordB = b;
-
-		convRGBtoXYZ(mCordR, mCordG, mCordB);
-		convXYZtoLab(mCordX, mCordY, mCordZ);
-	}
-
-	private void initRGBmode(float l, float a, float b) {
+	private void initLabmode(float l, float a, float b) {
 		mCordL = l;
 		mCorda = a;
 		mCordb = b;
@@ -105,7 +116,7 @@ public class MyColorPoint {
 		}else if(mColorSpace == ColorSpace.Adobe_RGB){
 			mCordX = (0.5778f) * r + (0.1825f * g) + (0.1902f * b);
 			mCordY = (0.3070f) * r + (0.6170f * g) + (0.0761f * b);
-			mCordZ = (0.0181f) * r + (0.0695f * g) + (0.0015f * b);
+			mCordZ = (0.0181f) * r + (0.0695f * g) + (1.0015f * b);
 		}else if(mColorSpace == ColorSpace.CIE_RGB){
 			mCordX = (0.4898f) * r + (0.3101f * g) + (0.2001f * b);
 			mCordY = (0.1769f) * r + (0.8124f * g) + (0.0107f * b);
@@ -130,46 +141,46 @@ public class MyColorPoint {
 		}
 	}
 
-	private void convXYZtoLab(float mCordX2, float mCordY2, float mCordZ2) {
+	private void convXYZtoLab(float x, float y, float z) {
 
-		mCordL = 116f * func_convXYZtoLab(mCordY / mCordYn) -16f;
-		mCorda = 500f * (func_convXYZtoLab(mCordX / mCordXn) - func_convXYZtoLab(mCordY / mCordYn));
-		mCordb = 200f * (func_convXYZtoLab(mCordX / mCordXn) - func_convXYZtoLab(mCordZ / mCordZn));
+		mCordL = 116f * func_convXYZtoLab(y / mCordYn) -16f;
+		mCorda = 500f * (func_convXYZtoLab(x / mCordXn) - func_convXYZtoLab(y / mCordYn));
+		mCordb = 200f * (func_convXYZtoLab(y / mCordYn) - func_convXYZtoLab(z / mCordZn));
 	}
 
 	//convXYZtoLab用tが0に近似する際無限大になるのを防ぐためケースわけする
 	private float func_convXYZtoLab(float t) {
 
-		if(t > Math.pow(6 / 29, 3)){
-			return (float) Math.pow(t, 3);
+		if(t > Math.pow(6 / 29f, 3f)){
+			return (float) Math.pow(t, 1 / 3f);
 		}else{
-			return (float) ((1 / 3) * Math.pow(29 / 6, 2) * t + (4 / 29));
+			return (float)((1 / 3f) * Math.pow(29 / 6f, 2f) * t + (4 / 29f));
 		}
 	}
 
 	private void invLabtoXYZ(float l, float a, float b) {
-		float fy = (l + 16) / 116;
-		float fx = fy + (a / 500);
-		float fz = fy - (b / 200);
+		float fy = (l + 16f) / 116f;
+		float fx = fy + (a / 500f);
+		float fz = fy - (b / 200f);
 
-		float delta = 6 / 29;
+		float delta = 6 / 29f;
 
 		if(fy > delta){
 			mCordY = (float) (mCordYn * Math.pow(fy, 3));
 		}else{
-			mCordY = (float) ((fy - (16 / 116)) * 3 * Math.pow(delta, 2) * mCordYn);
+			mCordY = (float) ((fy - (16 / 116f)) * 3 * Math.pow(delta, 2) * mCordYn);
 		}
 
 		if(fx > delta){
 			mCordY = (float) (mCordXn * Math.pow(fx, 3));
 		}else{
-			mCordY = (float) ((fx - (16 / 116)) * 3 * Math.pow(delta, 2) * mCordXn);
+			mCordY = (float) ((fx - (16 / 116f)) * 3 * Math.pow(delta, 2) * mCordXn);
 		}
 
 		if(fz > delta){
 			mCordY = (float) (mCordZn * Math.pow(fz, 3));
 		}else{
-			mCordY = (float) ((fz - (16 / 116)) * 3 * Math.pow(delta, 2) * mCordZn);
+			mCordY = (float) ((fz - (16 / 116f)) * 3 * Math.pow(delta, 2) * mCordZn);
 		}
 
 	}
@@ -179,7 +190,7 @@ public class MyColorPoint {
 	}
 
 	public void draw(GL10 gl){
-
+		mObject.draw(gl);
 	}
 
 }

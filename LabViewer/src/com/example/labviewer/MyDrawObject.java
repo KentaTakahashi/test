@@ -2,22 +2,7 @@ package com.example.labviewer;
 
 import javax.microedition.khronos.opengles.GL10;
 
-
-abstract class MyDrawObject {
-
-	protected float centerX;
-	protected float centerY;
-	protected float centerZ;
-	protected float drawSize;
-
-	//コンストラクタ
-	public MyDrawObject(float x, float y, float z, float size){
-		centerX = x;
-		centerY = y;
-		centerZ = z;
-		drawSize = size;
-	}
-
+interface  MyDrawObject {
 	//描画する抽象メソッド
-	abstract void draw(GL10 gl);
+	void draw(GL10 gl);
 }

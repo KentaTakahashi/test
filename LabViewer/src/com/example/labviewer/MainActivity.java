@@ -32,12 +32,25 @@ public class MainActivity extends Activity {
         //SurfaceViewと重ねるTextViewを準備
         TextView tv = new TextView(this);
         tv.setText("SurfaceViewとTextViewを重ねる");
-        tv.setHeight(30);
+        tv.setHeight(50);
+        tv.setWidth(50);
         tv.setTextColor(Color.BLACK);
         tv.setBackgroundColor(Color.WHITE);
 
         //FrameLayoutにTextViewをセットする
         fl.addView(tv, new ViewGroup.LayoutParams(FP, WC));
+
+        //SurfaceViewと重ねるTextv2iewを準備
+        TextView tv2 = new TextView(this);
+        tv2.setText("SurfaceViewとTextv2iewを重ねる");
+        tv2.setHeight(50);
+        tv2.setWidth(50);
+        tv2.setTextColor(Color.BLACK);
+        tv2.setBackgroundColor(Color.WHITE);
+
+        //FrameLayoutにTextv2iewをセットする
+        fl.addView(tv2, new ViewGroup.LayoutParams(FP, WC));
+        setContentView(R.layout.activity_main);
 	  }
 
 	  @Override
