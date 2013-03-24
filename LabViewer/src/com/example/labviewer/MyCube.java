@@ -12,10 +12,21 @@ public class MyCube implements  MyDrawObject{
 
   private FloatBuffer mVertexBuffer;
   private IntBuffer mColorBuffer;
+  private int mAlpha;
+  private float mR, mG, mB;
 
-  public MyCube(float x, float y, float z, float size, float r, float g, float b){
+  public MyCube(float x, float y, float z, float size, float r, float g, float b, int alpha){
 
 	  this(x, y, z, size);
+	  mR = r;
+	  mG = g;
+	  mB = b;
+	  mAlpha = alpha;
+	  initColor(mR, mG, mB);
+
+  }
+
+  private void initColor(float r, float g, float b) {
 
 	  int one = 0x10000;
 
@@ -35,50 +46,50 @@ public class MyCube implements  MyDrawObject{
 
 	  int colors[] = {
 			  // Front
-			  h4_r,		h4_g,		h4_b,		one,
-			  h3_r,		h3_g,		h3_b,		one,
-			  h3_r,		h3_g,		h3_b,		one,
-			  h2_r,		h2_g,		h2_b,		one,
+			  h4_r,		h4_g,		h4_b,		(one / 100 * mAlpha),
+			  h3_r,		h3_g,		h3_b,		(one / 100 * mAlpha),
+			  h3_r,		h3_g,		h3_b,		(one / 100 * mAlpha),
+			  h2_r,		h2_g,		h2_b,		(one / 100 * mAlpha),
 
 			  // Back
-			  h3_r,		h3_g,		h3_b,		one,
-			  h2_r,		h2_g,		h2_b,		one,
-			  h2_r,		h2_g,		h2_b,		one,
-			  h1_r,		h1_g,		h1_b,		one,
+			  h3_r,		h3_g,		h3_b,		(one / 100 * mAlpha),
+			  h2_r,		h2_g,		h2_b,		(one / 100 * mAlpha),
+			  h2_r,		h2_g,		h2_b,		(one / 100 * mAlpha),
+			  h1_r,		h1_g,		h1_b,		(one / 100 * mAlpha),
 
 			  // Left
-			  h4_r,		h4_g,		h4_b,		one,
-			  h3_r,		h3_g,		h3_b,		one,
-			  h3_r,		h3_g,		h3_b,		one,
-			  h2_r,		h2_g,		h2_b,		one,
+			  h4_r,		h4_g,		h4_b,		(one / 100 * mAlpha),
+			  h3_r,		h3_g,		h3_b,		(one / 100 * mAlpha),
+			  h3_r,		h3_g,		h3_b,		(one / 100 * mAlpha),
+			  h2_r,		h2_g,		h2_b,		(one / 100 * mAlpha),
 
 			  // Right
-			  h3_r,		h3_g,		h3_b,		one,
-			  h2_r,		h2_g,		h2_b,		one,
-			  h2_r,		h2_g,		h2_b,		one,
-			  h1_r,		h1_g,		h1_b,		one,
+			  h3_r,		h3_g,		h3_b,		(one / 100 * mAlpha),
+			  h2_r,		h2_g,		h2_b,		(one / 100 * mAlpha),
+			  h2_r,		h2_g,		h2_b,		(one / 100 * mAlpha),
+			  h1_r,		h1_g,		h1_b,		(one / 100 * mAlpha),
 
 			  // Top
-			  h3_r,		h3_g,		h3_b,		one,
-			  h2_r,		h2_g,		h2_b,		one,
-			  h2_r,		h2_g,		h2_b,		one,
-			  h1_r,		h1_g,		h1_b,		one,
+			  h3_r,		h3_g,		h3_b,		(one / 100 * mAlpha),
+			  h2_r,		h2_g,		h2_b,		(one / 100 * mAlpha),
+			  h2_r,		h2_g,		h2_b,		(one / 100 * mAlpha),
+			  h1_r,		h1_g,		h1_b,		(one / 100 * mAlpha),
 
 			  // Bottom
-			  h4_r,		h4_g,		h4_b,		one,
-			  h3_r,		h3_g,		h3_b,		one,
-			  h3_r,		h3_g,		h3_b,		one,
-			  h2_r,		h2_g,		h2_b,		one,
+			  h4_r,		h4_g,		h4_b,		(one / 100 * mAlpha),
+			  h3_r,		h3_g,		h3_b,		(one / 100 * mAlpha),
+			  h3_r,		h3_g,		h3_b,		(one / 100 * mAlpha),
+			  h2_r,		h2_g,		h2_b,		(one / 100 * mAlpha),
 		};
 		ByteBuffer vbb2 = ByteBuffer.allocateDirect(colors.length * 4);
 		vbb2.order(ByteOrder.nativeOrder());
 		mColorBuffer = vbb2.asIntBuffer();
+	  	mColorBuffer.clear();
 		mColorBuffer.put(colors);
 		mColorBuffer.position(0);
+}
 
-  }
-
-  public MyCube(float x, float y, float z, float size){
+public MyCube(float x, float y, float z, float size){
 
 	  float vertices[] = {
 			  // Front
@@ -133,8 +144,8 @@ public class MyCube implements  MyDrawObject{
     gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertexBuffer);
 	gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 
-	gl.glColorPointer(4, GL10.GL_FIXED, 0, mColorBuffer);
 	gl.glEnableClientState(GL10.GL_COLOR_ARRAY );
+	gl.glColorPointer(4, GL10.GL_FIXED, 0, mColorBuffer);
 
 	// Front
     gl.glNormal3f(0, 0, 1.0f);
@@ -160,5 +171,11 @@ public class MyCube implements  MyDrawObject{
     gl.glNormal3f(0, -1.0f, 0);
     gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 20, 4);
 
+  }
+
+  public void setAlpha(int alpha){
+	  //Log.v("setAlpha called", "setAlpha1 called at MyCube");
+	  mAlpha = alpha;
+	  initColor(mR, mG, mB);
   }
 }

@@ -3,6 +3,7 @@ package com.example.labviewer;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
@@ -111,6 +112,12 @@ public class MyGLView extends GLSurfaceView {
 		    // TODO Auto-generated method stub
 
 		}
+	}
+
+	public void setAlpha1(int progress) {
+		// TODO 自動生成されたメソッド・スタブ
+		Log.v("setAlpha called", "setAlpha1 called");
+		myRenderer.setAlpha1(progress);
 	}
 
 }

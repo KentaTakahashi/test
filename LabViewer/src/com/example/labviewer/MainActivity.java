@@ -1,18 +1,13 @@
 package com.example.labviewer;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.TextView;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 
 public class MainActivity extends Activity {
-
-	// LayoutParamsにセットするパラメータを準備
-    private final int FP = ViewGroup.LayoutParams.FILL_PARENT;
-    private final int WC = ViewGroup.LayoutParams.WRAP_CONTENT;
 
 	MyGLView myGLView;
 
@@ -20,37 +15,35 @@ public class MainActivity extends Activity {
 	  public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    myGLView = new MyGLView(this);
-	    //setContentView(myGLView);
 
-	    //FrameLayoutを準備
-        FrameLayout fl = new FrameLayout(this);
-        setContentView(fl);
-
-        //FrameLayoutにSurfaceViewをセットする
-        fl.addView(myGLView,new ViewGroup.LayoutParams(WC, WC));
-
-        //SurfaceViewと重ねるTextViewを準備
-        TextView tv = new TextView(this);
-        tv.setText("SurfaceViewとTextViewを重ねる");
-        tv.setHeight(50);
-        tv.setWidth(50);
-        tv.setTextColor(Color.BLACK);
-        tv.setBackgroundColor(Color.WHITE);
-
-        //FrameLayoutにTextViewをセットする
-        fl.addView(tv, new ViewGroup.LayoutParams(FP, WC));
-
-        //SurfaceViewと重ねるTextv2iewを準備
-        TextView tv2 = new TextView(this);
-        tv2.setText("SurfaceViewとTextv2iewを重ねる");
-        tv2.setHeight(50);
-        tv2.setWidth(50);
-        tv2.setTextColor(Color.BLACK);
-        tv2.setBackgroundColor(Color.WHITE);
-
-        //FrameLayoutにTextv2iewをセットする
-        fl.addView(tv2, new ViewGroup.LayoutParams(FP, WC));
         setContentView(R.layout.activity_main);
+
+        Log.v("setAlpha called", "setAlpha1 called");
+        myGLView.setAlpha1(50);
+
+        //myGLView= (MyGLView) findViewById(R.id.myGLView1);
+        SeekBar seekBar1 = (SeekBar) findViewById(R.id.seekBar1);
+        seekBar1.setMax(100);
+        seekBar1.setProgress(100);
+        seekBar1.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+            // トラッキング開始時に呼び出されます
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                Log.v("onStartTrackingTouch()",
+                    String.valueOf(seekBar.getProgress()));
+            }
+            // トラッキング中に呼び出されます
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
+                Log.v("onProgressChanged()",
+                    String.valueOf(progress) + ", " + String.valueOf(fromTouch));
+                myGLView.setAlpha1(seekBar.getProgress());
+            }
+            // トラッキング終了時に呼び出されます
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                Log.v("onStopTrackingTouch()",
+                    String.valueOf(seekBar.getProgress()));
+                myGLView.setAlpha1(seekBar.getProgress());
+            }
+        });
 	  }
 
 	  @Override

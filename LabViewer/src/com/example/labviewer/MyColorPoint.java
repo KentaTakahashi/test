@@ -29,7 +29,7 @@ public class MyColorPoint implements MyDrawObject{
 	private DrawType mDrawType;
 
 	//コンストラクタ
-	public MyColorPoint(ColorCoordinate colorcoordinate, float i, float j, float k, ColorSpace colorspace){
+	public MyColorPoint(ColorCoordinate colorcoordinate, float i, float j, float k, int alpha, ColorSpace colorspace){
 
 		mColorSpace = colorspace;
 
@@ -45,22 +45,22 @@ public class MyColorPoint implements MyDrawObject{
 		}
 		//描画タイプをデフォルトで正六面体とする
 		setDrawType(DrawType.Cube);
-		initDrawObject();
+		initDrawObject(alpha);
 	}
 
-	private void initDrawObject() {
+	private void initDrawObject(int alpha) {
 		// TODO 自動生成されたメソッド・スタブ
 		if(mDrawType == DrawType.Cube){
 			//mObject = new MyCube(mCordR, mCordG, mCordB, 0.02f, mCordR * 100, mCordG * 100, mCordB * 100);
 			//mObject = new MyCube(mCordX, mCordY, mCordZ, 0.02f, mCordR * 100, mCordG * 100, mCordB * 100);
-			mObject = new MyCube(mCorda/ 100, mCordL / 100, - mCordb/ 100, 0.02f, mCordR * 100, mCordG * 100, mCordB * 100);
+			mObject = new MyCube(mCorda/ 100, mCordL / 100, - mCordb/ 100, 0.02f, mCordR * 100, mCordG * 100, mCordB * 100, alpha);
 			//mObject = new MyCube(0, 0, 0, 0.5f, 50, 50, 50);//debug
 		}
 	}
 
 	//コンストラクタのオーバーライド、colorspaceはデフォルト値はsRGB
 	public MyColorPoint(ColorCoordinate colorcoordinate, float i, float j, float k){
-		this(colorcoordinate, i, j, k, ColorSpace.sRGB);
+		this(colorcoordinate, i, j, k, 100, ColorSpace.sRGB);
 	}
 
 	//コンストラクタ内で呼ばれる初期化関数
@@ -191,6 +191,11 @@ public class MyColorPoint implements MyDrawObject{
 
 	public void draw(GL10 gl){
 		mObject.draw(gl);
+	}
+
+	@Override
+	public void setAlpha(int alpha) {
+		mObject.setAlpha(alpha);
 	}
 
 }

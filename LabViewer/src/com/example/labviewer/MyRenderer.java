@@ -5,6 +5,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
+import android.util.Log;
 
 public class MyRenderer implements Renderer {
 
@@ -12,6 +13,7 @@ public class MyRenderer implements Renderer {
     private float mHeight;
     private float zNear =1.0f;
     private float zFar = 1000.0f;
+    private int mAlpha1 = 100;
 
     // 移動方向のベクトル成分
     private float posX = 0.0f, posY = 0.0f, posZ = 0.0f;
@@ -26,11 +28,11 @@ public class MyRenderer implements Renderer {
     private float eyeX = 0.0f, eyeY = 0.5f, eyeZ = 2.0f;
 
 	//MyCube myCube = new MyCube(0.0f, 0.0f, 0.0f, 0.5f);
-    MyCube myCube = new MyCube(0.0f, 0.0f, 0.0f, 0.5f, 70f, 70f, 00f);
-    MyCube myCube2 = new MyCube(0.5f, 0.0f, 0.0f, 0.5f, 00f, 70f, 70f);
+    MyCube myCube = new MyCube(0.0f, 0.0f, 0.0f, 0.5f, 70f, 70f, 00f, 100);
+    MyCube myCube2 = new MyCube(0.5f, 0.0f, 0.0f, 0.5f, 00f, 70f, 70f, 100);
     MyJpcColor myJpcColor  = new MyJpcColor();
 
-    MyColorPointGenerator myColorPointGenerator = new MyColorPointGenerator();
+    MyColorPointGenerator mColorPointGenerator1 = new MyColorPointGenerator(100);
 
 	private int size = 0x10000;
 	Triangle mTriangle  = new Triangle(0, size);
@@ -73,9 +75,7 @@ public class MyRenderer implements Renderer {
         //myCube2.draw(gl);
 		//myJpcColor.draw(gl);
 		//mTriangle.draw(gl);
-
-        myColorPointGenerator.draw(gl);
-
+        mColorPointGenerator1.draw(gl);
 	}
 
 	@Override
@@ -153,6 +153,15 @@ public class MyRenderer implements Renderer {
 		z = Math.min(z, zFar);
 		eyeZ = z;
 
+	}
+
+	public void setAlpha1(int progress) {
+		// TODO 自動生成されたメソッド・スタブ
+		Log.v("setAlpha called", "setAlpha1 called at MyRenderer");
+
+		mAlpha1 = progress;
+		mColorPointGenerator1.setAlpha(mAlpha1);
+		//mColorPointGenerator1 = new MyColorPointGenerator(mAlpha1);
 	}
 
 }
