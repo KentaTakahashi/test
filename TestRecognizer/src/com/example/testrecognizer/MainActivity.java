@@ -39,10 +39,18 @@ public class MainActivity extends Activity implements View.OnClickListener{
 	@Override
 	public void onClick(View arg0) {
 		// TODO 自動生成されたメソッド・スタブ
+		boolean debug_web =true;//web検索モードにするか？
 		try{
-			Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-			intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-					RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+			Intent intent;
+			if(debug_web){
+				intent = new Intent(RecognizerIntent.ACTION_WEB_SEARCH);
+				intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+						RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
+			}else{
+				intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+				intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+						RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+			}
 			intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "音声認識");
 			intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
 			startActivityForResult(intent, REQUEST_CODE );
