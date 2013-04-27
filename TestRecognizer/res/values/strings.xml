@@ -4,5 +4,6 @@
     <string name="app_name">TestRecognizer</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="start">音声認識開始</string>
 
 </resources>
