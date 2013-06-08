@@ -58,6 +58,14 @@ public class MainActivity extends Activity implements OnClickListener {
 		logText = (TextView)findViewById(R.id.logTextView);
 		mLogBuffer = new StringBuilder("ゲームスタート!\n");
 		logText.setText(mLogBuffer);
+
+		//test buttonに色と文字を設定
+		mButton_1_A.setText("W");
+		mButton_1_A.setTextColor(0xffff0000);
+		mButton_3_C.setText("D");
+		mButton_3_C.setTextColor(0xff00ff00);
+		mButton_5_E.setText("S");
+		mButton_5_E.setTextColor(0xff0000ff);
 	}
 
 	//それぞれのボタンにリスナーを設定する
@@ -157,6 +165,11 @@ public class MainActivity extends Activity implements OnClickListener {
 			mLife--;
 		}
 
+		// 艦を移動させる、衝突判定等のエラー処理は呼び出し側が実施する
+		public void move(int row, int column){
+			mRow = row;
+			mColumn = column;
+		}
 		public boolean isAlive() {
 			// TODO 自動生成されたメソッド・スタブ
 			if(mLife > 0) {

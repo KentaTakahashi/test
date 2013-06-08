@@ -22,6 +22,36 @@
             android:layout_width="match_parent"
             android:layout_height="50dp" >
 
+            <Button
+                android:id="@+id/Button_Start"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="@string/start_game" />
+
+            <Button
+                android:id="@+id/Button_Attack"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="@string/attack" />
+
+            <Button
+                android:id="@+id/button_Move_Warship"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="@string/move_warship" />
+
+            <Button
+                android:id="@+id/Button_Move_Destroyer"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="@string/move_destroyer" />
+
+            <Button
+                android:id="@+id/Button_Move_Submarine"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="@string/move_submarine" />
+
         </LinearLayout>
 
         <LinearLayout
