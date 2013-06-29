@@ -24,42 +24,47 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int BattleField=0x7f080002;
-        public static final int Button_1_A=0x7f080004;
-        public static final int Button_1_B=0x7f080005;
-        public static final int Button_1_C=0x7f080006;
-        public static final int Button_1_D=0x7f080007;
-        public static final int Button_1_E=0x7f080008;
-        public static final int Button_2_A=0x7f08000a;
-        public static final int Button_2_B=0x7f08000b;
-        public static final int Button_2_C=0x7f08000c;
-        public static final int Button_2_D=0x7f08000d;
-        public static final int Button_2_E=0x7f08000e;
-        public static final int Button_3_A=0x7f080010;
-        public static final int Button_3_B=0x7f080011;
-        public static final int Button_3_C=0x7f080012;
-        public static final int Button_3_D=0x7f080013;
-        public static final int Button_3_E=0x7f080014;
-        public static final int Button_4_A=0x7f080016;
-        public static final int Button_4_B=0x7f080017;
-        public static final int Button_4_C=0x7f080018;
-        public static final int Button_4_D=0x7f080019;
-        public static final int Button_4_E=0x7f08001a;
-        public static final int Button_5_A=0x7f08001c;
-        public static final int Button_5_B=0x7f08001d;
-        public static final int Button_5_C=0x7f08001e;
-        public static final int Button_5_D=0x7f08001f;
-        public static final int Button_5_E=0x7f080020;
-        public static final int FieldLine_1=0x7f080003;
-        public static final int FieldLine_2=0x7f080009;
-        public static final int FieldLine_3=0x7f08000f;
-        public static final int FieldLine_4=0x7f080015;
-        public static final int FieldLine_5=0x7f08001b;
+        public static final int BattleField=0x7f080007;
+        public static final int Button_1_A=0x7f080009;
+        public static final int Button_1_B=0x7f08000a;
+        public static final int Button_1_C=0x7f08000b;
+        public static final int Button_1_D=0x7f08000c;
+        public static final int Button_1_E=0x7f08000d;
+        public static final int Button_2_A=0x7f08000f;
+        public static final int Button_2_B=0x7f080010;
+        public static final int Button_2_C=0x7f080011;
+        public static final int Button_2_D=0x7f080012;
+        public static final int Button_2_E=0x7f080013;
+        public static final int Button_3_A=0x7f080015;
+        public static final int Button_3_B=0x7f080016;
+        public static final int Button_3_C=0x7f080017;
+        public static final int Button_3_D=0x7f080018;
+        public static final int Button_3_E=0x7f080019;
+        public static final int Button_4_A=0x7f08001b;
+        public static final int Button_4_B=0x7f08001c;
+        public static final int Button_4_C=0x7f08001d;
+        public static final int Button_4_D=0x7f08001e;
+        public static final int Button_4_E=0x7f08001f;
+        public static final int Button_5_A=0x7f080021;
+        public static final int Button_5_B=0x7f080022;
+        public static final int Button_5_C=0x7f080023;
+        public static final int Button_5_D=0x7f080024;
+        public static final int Button_5_E=0x7f080025;
+        public static final int Button_Attack=0x7f080003;
+        public static final int Button_Move_Destroyer=0x7f080005;
+        public static final int Button_Move_Submarine=0x7f080006;
+        public static final int Button_Start=0x7f080002;
+        public static final int FieldLine_1=0x7f080008;
+        public static final int FieldLine_2=0x7f08000e;
+        public static final int FieldLine_3=0x7f080014;
+        public static final int FieldLine_4=0x7f08001a;
+        public static final int FieldLine_5=0x7f080020;
         public static final int HeadLayout=0x7f080001;
-        public static final int action_settings=0x7f080023;
+        public static final int action_settings=0x7f080028;
+        public static final int button_Move_Warship=0x7f080004;
         public static final int linearLayout1=0x7f080000;
-        public static final int logTextView=0x7f080022;
-        public static final int scrollView1=0x7f080021;
+        public static final int logTextView=0x7f080027;
+        public static final int scrollView1=0x7f080026;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -95,8 +100,13 @@ public final class R {
         public static final int _5_E=0x7f05001c;
         public static final int action_settings=0x7f050001;
         public static final int app_name=0x7f050000;
+        public static final int attack=0x7f05001e;
         public static final int hello_world=0x7f050002;
         public static final int log=0x7f050008;
+        public static final int move_destroyer=0x7f050020;
+        public static final int move_submarine=0x7f050021;
+        public static final int move_warship=0x7f05001f;
+        public static final int start_game=0x7f05001d;
     }
     public static final class style {
         /** 
