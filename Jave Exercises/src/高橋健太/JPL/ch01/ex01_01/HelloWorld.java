@@ -1,4 +1,4 @@
-package JPL.ch01.ex01_01;
+package 高橋健太.JPL.ch01.ex01_01;
 
 public class HelloWorld {
 
