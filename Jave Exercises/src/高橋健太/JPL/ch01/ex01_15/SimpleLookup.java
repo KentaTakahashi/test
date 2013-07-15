@@ -8,9 +8,6 @@ public class SimpleLookup implements  ExtendsLookup{
 	private List<String> mNames = new ArrayList<String>();
 	private List<Object> mValues = new ArrayList<Object>();
 
-	private String[] names;
-	private Object[] values;
-
 	@Override
 	public Object find(String name) {
 		// TODO 自動生成されたメソッド・スタブ
