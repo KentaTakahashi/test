@@ -1,14 +1,23 @@
-package 高橋健太.JPL.ch02.ex02_06;
+package 高橋健太.JPL.ch02.ex02_08;
+
+//問 LinkedListにはどの様なコンストラクタを追加すべきか
+
+//答 以下2つのコンストラクタを追加すべき
+//①リスト対象のオブジェクトと次のオブジェクトを設定するコンストラクタ
+//②リスト対象のオブジェクトのみ設定するコンストラクタ
+//  →リストの最後のオブジェクトはNextがないため
 
 public class LinkedList {
 
 	private Object mVehicle = null;
 	private LinkedList next = null;
 
+	//①リスト対象のオブジェクトと次のオブジェクトを設定するコンストラクタ
 	public LinkedList(Object obj, LinkedList next) {
 		this.mVehicle = obj;
 		this.next = next;
 	}
+	//②リスト対象のオブジェクトのみ設定するコンストラクタ
 	public LinkedList(Vehicle obj) {
 		this.mVehicle = obj;
 	}
