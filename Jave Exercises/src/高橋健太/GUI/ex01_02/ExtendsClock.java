@@ -1,6 +1,7 @@
 package 高橋健太.GUI.ex01_02;
 
 import java.awt.Button;
+import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -25,16 +26,75 @@ import 高橋健太.GUI.ex01_01.SimpleClock;
 
 public class ExtendsClock extends SimpleClock{
 
+
+	static final List font_list = new List();
+	static final List fontsize_list = new List();
+	static final List color_list = new List();
+	static final List back_list = new List();
+	static final String[] COLOR_STR = {
+		"BLACK",
+		"BLUE",
+		"CYAN",
+		"DARK_GRAY",
+		"GRAY",
+		"GREEN",
+		"LIGHT_GRAY",
+		"MAGENTA",
+		"ORANGE",
+		"PINK",
+		"RED",
+		"WHITE",
+		"YELLOW"
+		};
+	static final Color[] COLOR = {
+		Color.BLACK,
+		Color.BLUE,
+		Color.CYAN,
+		Color.DARK_GRAY,
+		Color.GRAY,
+		Color.GREEN,
+		Color.LIGHT_GRAY,
+		Color.MAGENTA,
+		Color.ORANGE,
+		Color.PINK,
+		Color.RED,
+		Color.WHITE,
+		Color.YELLOW
+		};
+
 	private Font myFont = new Font("Myfont", Font.PLAIN, 12);
-	private List font_list = new List();
-	private List fontsize_list = new List();
-	private List color_list = new List();
-	private List back_list = new List();
+	private Color myFontColor;
+	private Color myBackColor;
 
 
 	public ExtendsClock(String str) {
 		super(str);
+		init_list();
 		setMyMenu();
+	}
+	private void init_list() {
+		//fontリスト設定
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		String[] fs = ge.getAvailableFontFamilyNames();
+		for (String name : fs) {
+			font_list.add(name);
+		}
+		//フォントサイズリスト設定
+		String[] fsize = {"8", "9", "10", "11", "12", "14", "16", "18", "24", "48", "72"};
+		for (String name : fsize) {
+			fontsize_list.add(name);
+		}
+		//フォントカラーリスト設定
+		for (String name : COLOR_STR) {
+			color_list.add(name);
+		}
+		//フォント背景カラーリスト設定
+		for (String name : COLOR_STR) {
+			back_list.add(name);
+		}
+		//debug
+		font_list.setSize(50, 100);
+		fontsize_list.setSize(300, 100);
 	}
 	public static void main(String[] args) {
 		ExtendsClock clock	= new ExtendsClock("ExtendsClock");
@@ -69,8 +129,9 @@ public class ExtendsClock extends SimpleClock{
 
 	@Override
 	public void paint(Graphics g) {
-		// TODO 自動生成されたメソッド・スタブ
 		g.setFont(myFont);
+		g.setColor(myFontColor);
+		setBackground(myBackColor);
 		super.paint(g);
 	}
 
@@ -87,9 +148,8 @@ public class ExtendsClock extends SimpleClock{
 			GridBagLayout gbl = new GridBagLayout();
 			setLayout(gbl);
 			setTitle("MyDialog");
-			setSize(400, 400);
+			setSize(300, 400);
 
-			//GridBagConstraints(int gridx, int gridy, int gridwidth, int gridheight, double weightx, double weighty, int anchor, int fill, Insets insets, int ipadx, int ipady)
 
 			Label font_label = new Label("フォント");
 			Label fontsize_label = new Label("フォントサイズ");
@@ -97,8 +157,7 @@ public class ExtendsClock extends SimpleClock{
 			Label back_label = new Label("背景色");
 
 			Button ok_btn = new Button("OK");
-
-			font_list.setSize(1, 1);
+			Button cancel_btn = new Button("キャンセル");
 
 			font_label.setAlignment(Label.RIGHT);
 			fontsize_label.setAlignment(Label.RIGHT);
@@ -106,7 +165,8 @@ public class ExtendsClock extends SimpleClock{
 			back_label.setAlignment(Label.RIGHT);
 
 			Insets insets = new Insets(0, 0, 0, 0);
-			GridBagConstraints gbc = new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, insets, 0, 0);
+			//GridBagConstraints(int gridx, int gridy, int gridwidth, int gridheight, double weightx, double weighty, int anchor, int fill, Insets insets, int ipadx, int ipady)
+			GridBagConstraints gbc = new GridBagConstraints(0, 0, 1, 1, 200.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0);
 
 			gbl.setConstraints(font_label, gbc);
 			gbc.gridy = GridBagConstraints.RELATIVE;
@@ -118,6 +178,8 @@ public class ExtendsClock extends SimpleClock{
 
 			gbc.gridx = 1;
 			gbc.gridy = 0;
+			gbc.gridwidth = 2;
+
 			gbl.setConstraints(font_list, gbc);
 			gbc.gridy = GridBagConstraints.RELATIVE;
 			gbl.setConstraints(fontsize_list, gbc);
@@ -125,8 +187,13 @@ public class ExtendsClock extends SimpleClock{
 			gbl.setConstraints(color_list, gbc);
 			gbc.gridy = GridBagConstraints.RELATIVE;
 			gbl.setConstraints(back_list, gbc);
+
 			gbc.gridy = GridBagConstraints.RELATIVE;
+			gbc.gridwidth = 1;
+			gbc.fill = GridBagConstraints.NONE;
 			gbl.setConstraints(ok_btn, gbc);
+			gbc.gridx = 2;
+			gbl.setConstraints(cancel_btn, gbc);
 
 			add(font_label);
 			add(fontsize_label);
@@ -141,17 +208,30 @@ public class ExtendsClock extends SimpleClock{
 			add(ok_btn);
 			ok_btn.addActionListener(this);
 
-			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			String[] fs = ge.getAvailableFontFamilyNames();
-			for (String name : fs) {
-				font_list.add(name);
-			}
+			add(cancel_btn);
+			//キャンセルボタンが押された場合、何も設定せずダイアログを閉じる
+			cancel_btn.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					setVisible(false);
+				}
+			});
 	    }
-	    public void actionPerformed(ActionEvent e) {
-	    	//setFont(font_list.getSelectedItem());
-	    	myFont = new Font("Myfont", Font.ROMAN_BASELINE, 20);
-	    	System.out.println("test");
-	    	setVisible(false);
+		//OKボタンが押された場合、設定された項目をメンバ変数に設定する
+		public void actionPerformed(ActionEvent e) {
+			String select_font = font_list.getSelectedItem();
+			String select_size = fontsize_list.getSelectedItem();
+			String select_color = color_list.getSelectedItem();
+			String select_back = back_list.getSelectedItem();
+
+			if(select_font != null) myFont = Font.decode(select_font);
+			if(select_size != null) myFont = myFont.deriveFont(Float.valueOf(select_size));
+
+			for(int i = 0; i < COLOR_STR.length; i++) {
+				if(COLOR_STR[i].equals(select_color)) myFontColor = COLOR[i];
+				if(COLOR_STR[i].equals(select_back)) myBackColor = COLOR[i];
+			}
+			setVisible(false);
 	    }
 	}
 }
