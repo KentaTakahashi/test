@@ -3,13 +3,16 @@ package 高橋健太.GUI.ex01_02;
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Label;
 import java.awt.List;
@@ -17,15 +20,20 @@ import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.MenuItem;
 import java.awt.MenuShortcut;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Date;
 
 import 高橋健太.GUI.ex01_01.SimpleClock;
 
 public class ExtendsClock extends SimpleClock{
 
+	boolean  flagUpdate = true;        /* UpDateされたか */
+	Image    imgBuffer;                 /* バッファ用のイメージ */
+	Graphics gBuffer;                   /* バッファ用のGraphicsクラス */
 
 	static final List font_list = new List();
 	static final List fontsize_list = new List();
@@ -63,9 +71,8 @@ public class ExtendsClock extends SimpleClock{
 		};
 
 	private Font myFont = new Font("Myfont", Font.PLAIN, 12);
-	private Color myFontColor;
-	private Color myBackColor;
-
+	private Color myFontColor = Color.BLACK;
+	private Color myBackColor = Color.WHITE;
 
 	public ExtendsClock(String str) {
 		super(str);
@@ -129,10 +136,51 @@ public class ExtendsClock extends SimpleClock{
 
 	@Override
 	public void paint(Graphics g) {
-		g.setFont(myFont);
-		g.setColor(myFontColor);
-		setBackground(myBackColor);
-		super.paint(g);
+
+		if(imgBuffer == null) {
+			imgBuffer = createImage(100, 100);
+			gBuffer = imgBuffer.getGraphics();
+		}
+
+		Date date = new Date();
+		String text = date.toString();
+
+		/* fontを設定 */
+		gBuffer.setFont(myFont);
+
+		if(flagUpdate){
+			FontMetrics fm = gBuffer.getFontMetrics();
+			Rectangle rectText = fm.getStringBounds(text, gBuffer).getBounds();
+			Insets i = this.getInsets();
+			int frameX = rectText.width + i.left + i.right;
+			int frameY = rectText.height + i.top + i.bottom;
+			this.setSize(frameX, frameY);
+			imgBuffer = createImage(frameX, frameY);
+			gBuffer = imgBuffer.getGraphics();
+
+			flagUpdate =false;
+		}
+
+		/* キャンバスのサイズを取得する */
+		Dimension d = getSize();
+
+		/* 背景色を設定 */
+		gBuffer.setColor(myBackColor);
+		gBuffer.fillRect(0, 0, d.width, d.height);
+
+		/* 描画色を設定 */
+		gBuffer.setColor(myFontColor);
+		FontMetrics fm = gBuffer.getFontMetrics();
+
+		Insets insets = this.getInsets();
+		gBuffer.drawString(text, insets.left, insets.top +fm.getMaxAscent());
+
+		g.drawImage(imgBuffer, 0, 0, this);
+	}
+
+	@Override
+	public void update(Graphics g) {
+		paint(g);
 	}
 
 	class MyPropertyDialog extends Dialog implements ActionListener {
@@ -232,6 +280,8 @@ public class ExtendsClock extends SimpleClock{
 				if(COLOR_STR[i].equals(select_back)) myBackColor = COLOR[i];
 			}
 			setVisible(false);
+
+			flagUpdate = true;
 	    }
 	}
 }
