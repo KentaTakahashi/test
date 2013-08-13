@@ -1,0 +1,16 @@
+インライン展開による高速化のため以下のセッター/ゲッターをfainalとする
+
+class Vehicle
+	public int getID()
+	public int getSpeed()
+	public int getDirection()
+	public String getOwner()
+	public void setSpeed(int speed)
+	public void setDirection(int direction)
+	public void setOwner(String owner)
+
+class PassengerVehicle
+	public int getmSeatCapacity()
+	public void setmSeatCapacity(int mSeatCapacity)
+	public int getmRiderShip()
+	public void setmRiderShip(int mRiderShip)

@@ -39,19 +39,26 @@ class ColorAttr extends Attr {
 			myColor = new ScreenColor(getValue());
 	}
 	/* (非 Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		// TODO 自動生成されたメソッド・スタブ
-		return super.hashCode();
-	}
-
-	/* (非 Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		return super.equals(obj);
+		if (this == obj)
+		    return true;
+		if (obj == null)
+		    return false;
+		//型が等しく、myColorが等しければtrueを返す
+		if (getClass() != obj.getClass())
+		    return false;
+		ColorAttr other = (ColorAttr) obj;
+		return myColor.equals(other.getColor());
+	}
+	/* (非 Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 * myColorのハッシュコードを返すこととする
+	 */
+	@Override
+	public int hashCode() {
+		return myColor.hashCode();
 	}
 }

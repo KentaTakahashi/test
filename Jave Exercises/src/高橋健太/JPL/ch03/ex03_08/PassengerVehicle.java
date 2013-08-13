@@ -1,6 +1,6 @@
-package 高橋健太.JPL.ch03.ex03_04;
+package 高橋健太.JPL.ch03.ex03_08;
 
-public class PassengerVehicle extends Vehicle {
+public class PassengerVehicle extends Vehicle implements Cloneable {
 	private int mSeatCapacity;
 	private int mRiderShip;
 
@@ -13,7 +13,14 @@ public class PassengerVehicle extends Vehicle {
 		this(owner, capa);
 		this.mRiderShip = rider;
 	}
+	@Override
+	public PassengerVehicle clone() {
+		PassengerVehicle ret = new PassengerVehicle(this.getOwner(), this.getmSeatCapacity(), this.getmRiderShip());
+		ret.setDirection(this.getDirection());
+		ret.setSpeed(this.getSpeed());
 
+		return ret;
+	}
 	public int getmSeatCapacity() {
 		return mSeatCapacity;
 	}
@@ -36,11 +43,9 @@ public class PassengerVehicle extends Vehicle {
 	}
 	public static void main(String[] args) {
 		PassengerVehicle test_1 = new PassengerVehicle("Alice", 4, 2);
-		PassengerVehicle test_2 = new PassengerVehicle("Bob", 5, 5);
-		PassengerVehicle test_3 = new PassengerVehicle("Carol", 6, 1);
+		PassengerVehicle clone_1 = test_1.clone();
 
-		System.out.println(test_1.toString());
-		System.out.println(test_2.toString());
-		System.out.println(test_3.toString());
+		System.out.println("test_1:" + test_1.toString());
+		System.out.println("clone_1:" + clone_1.toString());
 	}
 }
