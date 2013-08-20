@@ -1,9 +1,12 @@
 package 高橋健太.JPL.ch05.ex05_02;
 
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
+
 public class BankAccount {
 	private long number;	//口座番号
 	private long balance;	//現在の残高（単位はセント）
-	private Action lastAct;	//最後におこなわれた処理
+	private History latest = new History();	//最新のヒストリー
 
 	public class Action {
 		private String act;
@@ -11,29 +14,75 @@ public class BankAccount {
 		public Action(String act, long amount) {
 			this.act = act;
 			this.amount = amount;
-			upDate(this);	//Historyをアップデートする
 		}
 		public String toString() {
 			return number + ": " + act + " " + amount;
 		}
 	}
-	public class History {
-		Action actHistory;
-		Action next = null;
+	public class History implements Cloneable{
 		static final int maxHistoryNum = 10;
-		public History() {
-
+		Queue<Action> actHistory = new ArrayBlockingQueue<Action>(maxHistoryNum);
+		public void upDate(Action act) {
+			if(actHistory.size() == maxHistoryNum) actHistory.poll();//キューが一杯の場合、一番古いデータを削除
+			actHistory.add(act);
+		}
+		public Action next() {
+			return actHistory.poll();
+		}
+		@Override
+		public History clone(){
+			try {
+				return (History)super.clone();
+			} catch (CloneNotSupportedException e) {
+				//起こりえない。cloneをサポートしてる
+				throw new InternalError(e.toString());
+			}
 		}
 	}
+	//預金
 	public void deposit(long amount) {
 		balance += amount;
-		lastAct = new Action("deposit", amount);
+		latest.upDate(new Action("deposit", amount));	//Historyをアップデートする
 	}
+	//引き出す
 	public void withdraw(long amount) {
 		balance -= amount;
-		lastAct = new Action("withdraw", amount);
+		latest.upDate(new Action("withdraw", amount));	//Historyをアップデートする
 	}
-	private void upDate(Action act) {
+	//残高照会
+	public void inquiry() {
+		System.out.println("balance : " + balance);
+		latest.upDate(new Action("inquiry", 0));	//Historyをアップデートする
+	}
+	//最新のヒストリーを返す
+	public History history() {
+		return latest.clone();
+	}
+	public static void main(String[] args) {
+		BankAccount testAccount = new BankAccount();
+		testAccount.deposit(100);
+		testAccount.withdraw(100);
+		testAccount.deposit(100);
+		testAccount.deposit(500);
+		testAccount.withdraw(150);
+		testAccount.inquiry();
+		testAccount.withdraw(100);
+		testAccount.deposit(100);
+		testAccount.deposit(100);
+		testAccount.withdraw(150);
+		testAccount.withdraw(100);
+		testAccount.inquiry();
+		testAccount.deposit(100);
+		testAccount.withdraw(150);
 
+		History testHistory = testAccount.history();
+		//testAccountのHistoryを確認、tailコマンドのようなイメージで最後の10件の処理を表示する
+		System.out.println("-------------show History-------------");
+		Action tmp = testHistory.next();
+		while(tmp != null) {
+			System.out.println(tmp.toString());
+			tmp = testHistory.next();
+		}
+		System.out.println("-------------show History end-------------");
 	}
 }
