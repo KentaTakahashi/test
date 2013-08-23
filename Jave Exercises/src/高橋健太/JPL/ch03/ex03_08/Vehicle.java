@@ -27,11 +27,28 @@ public class Vehicle implements Cloneable {
 	}
 	@Override
 	public Vehicle clone() {
+		//この実装は間違え！！
+		/*
 		Vehicle ret = new Vehicle();
 		ret.setDirection(this.getDirection());
 		ret.setOwner(this.getOwner());
 		ret.setSpeed(this.getSpeed());
 
+		return ret;
+		*/
+		//例えば以下のように実装する
+		Vehicle ret = null;
+		try {
+			ret = (Vehicle) super.clone();
+			ret.setDirection(this.getDirection());
+			ret.setOwner(this.getOwner());
+			ret.setSpeed(this.getSpeed());
+			ret.mID = nextID;
+			nextID++;
+		} catch (CloneNotSupportedException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
 		return ret;
 	}
 
