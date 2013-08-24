@@ -46,7 +46,7 @@ public class SimpleClock extends Frame implements Runnable {
 		this.setSize(frameX, frameY);
 		g.drawString(text, insets.left, insets.top +fm.getMaxAscent());
 	}
-	class WindowClose extends WindowAdapter {
+	protected class WindowClose extends WindowAdapter {
 		@Override
 		public void windowClosing(WindowEvent e) {
 			System.exit(0);						//WindowClosw時にプログラムの終了処理を実行する
