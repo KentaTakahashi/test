@@ -104,6 +104,7 @@ public class ExtendsClock extends Frame implements Runnable {
 		setMyMenu();
 		prefs = Preferences.userNodeForPackage(this.getClass());//プリファレンスのノード取得
 		load();//プリファレンスのロード
+		setSize(100, 100);
 		setLocation(current_X, current_Y);
 		setVisible(true);						//Windowを表示に設定
 	}
@@ -178,7 +179,7 @@ public class ExtendsClock extends Frame implements Runnable {
 			Insets i = this.getInsets();
 			int frameX = rectText.width + i.left + i.right;
 			int frameY = rectText.height + i.top + i.bottom;
-			this.setSize(frameX, frameY);
+			setSize(frameX, frameY);
 			imgBuffer = createImage(frameX, frameY);
 			gBuffer = imgBuffer.getGraphics();
 
