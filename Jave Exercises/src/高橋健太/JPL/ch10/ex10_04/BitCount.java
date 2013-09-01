@@ -1,0 +1,15 @@
+package 高橋健太.JPL.ch10.ex10_04;
+
+public class BitCount {
+
+	static public int count(int input) {
+		int cnt = 0;
+		int i = 0;
+		while(i < Integer.SIZE - 1){
+			cnt += (input%2);
+			input = input >> 1;
+			i++;
+		}
+		return cnt;
+	}
+}

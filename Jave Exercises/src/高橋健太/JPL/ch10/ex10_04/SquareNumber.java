@@ -1,4 +1,4 @@
-package 高橋健太.JPL.ch01.ex01_04;
+package 高橋健太.JPL.ch10.ex10_04;
 
 public class SquareNumber {
 
@@ -6,9 +6,12 @@ public class SquareNumber {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		int n = 1;
 		System.out.println("Title:SquareNumber Sequence");//タイトル
-		for(int n = 1; n*n < 50; n++ )
-			System.out.println((n*n));
+		while(n*n < 50) {
+			System.out.println((int)Math.pow(n, 2));
+			n++;
+		}
 	}
 
 }

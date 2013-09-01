@@ -6,7 +6,6 @@ public class Fibonacci {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO 自動生成されたメソッド・スタブ
 		int lo = 1;
 		int hi = 1;
 		System.out.println("Title:Fibonacci Sequence");//タイトル
