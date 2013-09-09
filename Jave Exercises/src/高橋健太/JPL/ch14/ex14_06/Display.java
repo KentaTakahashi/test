@@ -15,20 +15,19 @@ public class Display implements Runnable {
 	@Override
 	public void run() {
 		int count = 0;
-		while(true) {
 			synchronized (timer) {
-				try {
-					timer.wait();
-					if(count++ % interval == 0) {
+			try {
+				while(true) {
+					if(count % interval == 0) {
 						System.out.println(msg);
 						timer.setDisplay();
 					}
-					timer.notifyAll();
-				} catch (InterruptedException e) {
-					System.out.println(e);
+					timer.wait();//1secごとの通知をwaitする
+					count++;
 				}
+			} catch (InterruptedException e) {
+				System.out.println(e);
 			}
 		}
 	}
-
 }

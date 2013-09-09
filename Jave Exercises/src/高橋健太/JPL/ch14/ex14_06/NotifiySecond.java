@@ -3,24 +3,24 @@ package 高橋健太.JPL.ch14.ex14_06;
 
 public class NotifiySecond implements Runnable {
 
-	static private long second = 0;
-	static private long start = System.currentTimeMillis();
-	static private boolean isDisplayTime;
+	private long second = 0;
+	private long start = System.currentTimeMillis();
+	private boolean isDisplayTime =  false;
 
 	@Override
 	public void run() {
-		while(true) {
-			synchronized (this) {
-				try {
-					wait(2);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+		synchronized (this) {
+			try {
+				while(true) {
+					if(isOneSecondElapsed()) {
+						second++;
+						notifyAll();
+					}
+					if(isDisplayTime) DisplayTime();
+					wait(1);
 				}
-				if(isOneSecondElapsed()) {
-					second++;
-					notifyAll();
-				}
-				if(isDisplayTime) DisplayTime();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -28,11 +28,11 @@ public class NotifiySecond implements Runnable {
 		isDisplayTime = true;
 	}
 	private void DisplayTime() {
-		System.out.println("実行開始からの経過時間:" + (System.currentTimeMillis() - start));
+		System.out.println("実行開始からの経過時間:" + (System.currentTimeMillis() - start) + "msec\n");
 		isDisplayTime = false;
 	}
 	private boolean isOneSecondElapsed() {
-		long now = (System.currentTimeMillis() - start) / 1000;
-		return second + 1 < now;
+		long now = System.currentTimeMillis() - start;
+		return (second + 1) * 1000 <= now;
 	}
 }

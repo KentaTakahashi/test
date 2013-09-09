@@ -8,10 +8,10 @@ public class Main {
 		NotifiySecond ns = new NotifiySecond();
 		new Thread(ns, "NotifiySecond").start();
 
-		Display d15 = new Display(ns, 15, "interval 15sec");
+		Display d15 = new Display(ns, 15, "msg:interval 15sec!");
 		new Thread(d15).start();
 
-		Display d07 = new Display(ns, 7, "interval 7sec");
+		Display d07 = new Display(ns, 7, "msg:interval 7sec!");
 		new Thread(d07).start();
 	}
 }
