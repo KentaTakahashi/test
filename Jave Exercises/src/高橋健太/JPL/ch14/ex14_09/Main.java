@@ -20,7 +20,9 @@ public class Main {
 		ThreadGroupTree.show(group_1);
 		ThreadGroupTree.show(group_2);
 		ThreadGroupTree.show(group_3);
-	}
 
+
+		System.out.println(Boolean.parseBoolean("tRue"));
+	}
 
 }
