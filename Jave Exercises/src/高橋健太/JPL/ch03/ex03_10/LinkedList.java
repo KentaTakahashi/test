@@ -16,6 +16,7 @@ public class LinkedList implements Cloneable {
 	}
 	@Override
 	public LinkedList clone() {
+		//この書き方はNG、継承時にオブジェクトのキャストができない
 		//再帰的にクローン、LinkedListは複製し、Objectは共有する（リンクのループは考慮してない）
 		if(this.next == null)
 			return new LinkedList(this.get());

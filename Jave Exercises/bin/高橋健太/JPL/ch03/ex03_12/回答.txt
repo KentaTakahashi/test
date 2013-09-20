@@ -1,2 +1,5 @@
 回答
 hashcodeで比較する
+→NG、hashcodeは比較するものではない
+　例えばソートの引数にソート方法を追加するとか
+　compareをabstractにするとか

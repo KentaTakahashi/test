@@ -13,6 +13,7 @@ public class Garage implements Cloneable {
 	}
 	@Override
 	public Garage clone() {
+		//この書き方はNG、継承時にオブジェクトのキャストができない
 		Garage ret = new Garage(getCapacity());
 		for(int i = 0; i < mCapacity; i++) {
 			ret.addVehicle(this.getVehicle(i).clone(), i);
