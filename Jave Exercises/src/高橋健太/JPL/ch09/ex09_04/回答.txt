@@ -1,0 +1,26 @@
+No 01: 3 << 2L -1
+	○ int 6 （シフトカウントがロングでも左辺がintならばint型）
+No 02: (3L << 2) - 1
+	○ long 11
+No 03: 10 < 12 == 6 > 17
+	○ boolean false （演算の優先順位より左右の不等号をbooleanで評価してから中央の等値評価をおこなう）
+No 04: 10 << 12 == 6 >> 17
+	○ boolean false（No03同様の優先順位で評価）
+No 05: 13.5e-1 % Float.POSITIVE_INFINITY
+	○ double 1.35
+No 06: Float.POSITIVE_INFINITY + Double.NEGATIVE_INFINITY
+	○ double NaN
+No 07: Double.POSITIVE_INFINITY + Float.NEGATIVE_INFINITY
+	○ double NaN
+No 08: 0.0 / -0.0 == -0.0 / 0.0
+	○ boolean false (両辺NaNとなるがNaN同士の比較演算は常にfalseを返すため)
+No 09: Integer.MAX_VALUE + Integer.MIN_VALUE
+	○ int -1 (2147483647 - 2147483648)
+No 10: Long.MAX_VALUE + 5
+	×：Maxに5を加えるとオーバーフローする
+No 11: (short) 5 * (byte) 10
+	○ short 50 (ビットサイズが大きいshort型となる)
+No 12 (i < 15 ? 1.72e3f : 0)
+	○ float 1720.0 (ただし、No13同様にi = 3を仮定する)
+No 13 i++ + i++ + --i
+	○ int 11 (3 + 4 + 4)

@@ -26,20 +26,32 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Date;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 
-import 高橋健太.GUI.ex01_01.SimpleClock;
+public class ExtendsClock extends Frame implements Runnable {
 
-public class ExtendsClock extends SimpleClock{
+	private Preferences prefs;					//* プリファレンス */
+	private static final String KEY_FONT = "font";
+	private static final String KEY_FONTSIZE = "fontsize";
+	private static final String KEY_FONTCOLOR = "fontcolor";
+	private static final String KEY_BACKCOLOR = "backcolor";
+	private static final String KEY_CURRENT_X = "current_x";
+	private static final String KEY_CURRENT_Y = "current_y";
 
-	boolean  flagUpdate = true;        /* UpDateされたか */
-	Image    imgBuffer;                 /* バッファ用のイメージ */
-	Graphics gBuffer;                   /* バッファ用のGraphicsクラス */
 
-	static final List font_list = new List();
-	static final List fontsize_list = new List();
-	static final List color_list = new List();
-	static final List back_list = new List();
-	static final String[] COLOR_STR = {
+	private boolean  flagUpdate = true;			/* UpDateされたか */
+	private Image    imgBuffer;					/* バッファ用のイメージ */
+	private Graphics gBuffer;					/* バッファ用のGraphicsクラス */
+
+	private List font_list = new List();
+	private List fontsize_list = new List();
+	private List color_list = new List();
+	private List back_list = new List();
+
+	public static final String[] FONT_STR = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+	public static final String[] FONTSIZE_STR = {"8", "12", "18", "24", "48", "72", "120"};
+	public static final String[] COLOR_STR = {
 		"BLACK",
 		"BLUE",
 		"CYAN",
@@ -54,7 +66,7 @@ public class ExtendsClock extends SimpleClock{
 		"WHITE",
 		"YELLOW"
 		};
-	static final Color[] COLOR = {
+	public static final Color[] COLOR = {
 		Color.BLACK,
 		Color.BLUE,
 		Color.CYAN,
@@ -70,43 +82,56 @@ public class ExtendsClock extends SimpleClock{
 		Color.YELLOW
 		};
 
-	private Font myFont = new Font("Myfont", Font.PLAIN, 12);
-	private Color myFontColor = Color.BLACK;
-	private Color myBackColor = Color.WHITE;
+	private Font myFont = new Font("Myfont", Font.PLAIN, 48);
+	private float myFontSize = 48;
+	private int myFontColorIndex = 0;	//BLACK
+	private int myBackColorIndex = 11;	//WHITE
+	private int current_X;
+	private int current_Y;
 
 	public ExtendsClock(String str) {
-		super(str);
+		setTitle(str);							//Titleの設定
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				save();//プリファレンスのセーブ
+				System.exit(0);						//WindowClosw時にプログラムの終了処理を実行する
+			}
+		});
+
+		//WindowClose時にプログラム終了するよう設定
 		init_list();
 		setMyMenu();
+		prefs = Preferences.userNodeForPackage(this.getClass());//プリファレンスのノード取得
+		load();//プリファレンスのロード
+		setSize(100, 100);
+		setLocation(current_X, current_Y);
+		setVisible(true);						//Windowを表示に設定
 	}
 	private void init_list() {
 		//fontリスト設定
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		String[] fs = ge.getAvailableFontFamilyNames();
-		for (String name : fs) {
-			font_list.add(name);
-		}
+		for (String fn : FONT_STR) font_list.add(fn);
 		//フォントサイズリスト設定
-		String[] fsize = {"8", "9", "10", "11", "12", "14", "16", "18", "24", "48", "72"};
-		for (String name : fsize) {
-			fontsize_list.add(name);
-		}
+		for (String fs : FONTSIZE_STR) fontsize_list.add(fs);
 		//フォントカラーリスト設定
-		for (String name : COLOR_STR) {
-			color_list.add(name);
-		}
+		for (String fc : COLOR_STR) color_list.add(fc);
 		//フォント背景カラーリスト設定
-		for (String name : COLOR_STR) {
-			back_list.add(name);
-		}
-		//debug
-		font_list.setSize(50, 100);
-		fontsize_list.setSize(300, 100);
+		for (String bl : COLOR_STR) back_list.add(bl);
 	}
 	public static void main(String[] args) {
 		ExtendsClock clock	= new ExtendsClock("ExtendsClock");
 		Thread th			= new Thread(clock);
 		th.start();
+	}
+	public void run() {
+		while(true) {
+			repaint();							//再表示
+			try {
+				Thread.sleep(10);				//スリープ10msec;
+			} catch(InterruptedException e) {
+				;								//特に処理はしない
+			}
+		}
 	}
 	private void setMyMenu() {
 
@@ -146,7 +171,7 @@ public class ExtendsClock extends SimpleClock{
 		String text = date.toString();
 
 		/* fontを設定 */
-		gBuffer.setFont(myFont);
+		gBuffer.setFont(myFont.deriveFont(myFontSize));
 
 		if(flagUpdate){
 			FontMetrics fm = gBuffer.getFontMetrics();
@@ -154,7 +179,7 @@ public class ExtendsClock extends SimpleClock{
 			Insets i = this.getInsets();
 			int frameX = rectText.width + i.left + i.right;
 			int frameY = rectText.height + i.top + i.bottom;
-			this.setSize(frameX, frameY);
+			setSize(frameX, frameY);
 			imgBuffer = createImage(frameX, frameY);
 			gBuffer = imgBuffer.getGraphics();
 
@@ -165,11 +190,11 @@ public class ExtendsClock extends SimpleClock{
 		Dimension d = getSize();
 
 		/* 背景色を設定 */
-		gBuffer.setColor(myBackColor);
+		gBuffer.setColor(COLOR[myBackColorIndex]);
 		gBuffer.fillRect(0, 0, d.width, d.height);
 
 		/* 描画色を設定 */
-		gBuffer.setColor(myFontColor);
+		gBuffer.setColor(COLOR[myFontColorIndex]);
 		FontMetrics fm = gBuffer.getFontMetrics();
 
 		Insets insets = this.getInsets();
@@ -273,15 +298,38 @@ public class ExtendsClock extends SimpleClock{
 			String select_back = back_list.getSelectedItem();
 
 			if(select_font != null) myFont = Font.decode(select_font);
-			if(select_size != null) myFont = myFont.deriveFont(Float.valueOf(select_size));
+			if(select_size != null) myFontSize = Float.valueOf(select_size);
 
 			for(int i = 0; i < COLOR_STR.length; i++) {
-				if(COLOR_STR[i].equals(select_color)) myFontColor = COLOR[i];
-				if(COLOR_STR[i].equals(select_back)) myBackColor = COLOR[i];
+				if(COLOR_STR[i].equals(select_color)) myFontColorIndex = i;
+				if(COLOR_STR[i].equals(select_back)) myBackColorIndex = i;
 			}
 			setVisible(false);
 
 			flagUpdate = true;
 	    }
 	}
+	public void save() {
+        try {
+        	prefs.put(KEY_FONT, myFont.getFamily());
+        	prefs.putFloat(KEY_FONTSIZE, myFontSize);
+        	prefs.putInt(KEY_FONTCOLOR, myFontColorIndex);
+        	prefs.putInt(KEY_BACKCOLOR, myBackColorIndex);
+        	prefs.putInt(KEY_CURRENT_X, getX());
+        	prefs.putInt(KEY_CURRENT_Y, getY());
+            prefs.flush();
+        } catch (BackingStoreException ex) {
+            ex.printStackTrace();
+        }
+    }
+    public void load() {
+        String font = prefs.get(KEY_FONT, "no data");
+        if(font.equals("no data"))return;//フォントが設定されて無ければリターン
+        myFont = Font.decode(font);
+        myFontSize = prefs.getFloat(KEY_FONTSIZE, -1);
+        myFontColorIndex = prefs.getInt(KEY_FONTCOLOR, -1);
+        myBackColorIndex = prefs.getInt(KEY_BACKCOLOR, -1);
+        current_X = prefs.getInt(KEY_CURRENT_X, -1);
+        current_Y = prefs.getInt(KEY_CURRENT_Y, -1);
+    }
 }

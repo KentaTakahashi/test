@@ -6,13 +6,9 @@ public class SquareNumber {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO 自動生成されたメソッド・スタブ
-		int n = 1;
 		System.out.println("Title:SquareNumber Sequence");//タイトル
-		while(Math.pow(n, 2) < 50) {
-			System.out.println((int)Math.pow(n, 2));
-			n++;
-		}
+		for(int n = 1; n*n < 50; n++ )
+			System.out.println((n*n));
 	}
 
 }
