@@ -1,0 +1,8 @@
+TreeNode:
+
+TreeWalker:
+
+Drawable:
+	インターフェース型が妥当。
+Application:
+	具現クラス型が妥当。
