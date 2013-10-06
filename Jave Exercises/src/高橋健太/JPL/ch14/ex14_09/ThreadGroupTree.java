@@ -24,7 +24,7 @@ public class ThreadGroupTree extends Thread{
 					}
 				}
 			}
-		});
+		}, "showThread");
 		th.start();
 
 		return th;//スレッドの終了等の処理は呼び出し元に任せる
@@ -34,15 +34,22 @@ public class ThreadGroupTree extends Thread{
 		int active = group.activeCount();			//アクティブなスレッド+アクティブなグループの数
 		int activeGroup = group.activeGroupCount();	//アクティブなグループの数
 
-		Thread[] ThreadList = new Thread[active - activeGroup];
+		Thread[] ThreadList = new Thread[active];
 		group.enumerate(ThreadList, false);
 
 		ThreadGroup[] GroupList = new ThreadGroup[activeGroup];
 		group.enumerate(GroupList, false);
 
-		for(Thread th: ThreadList) System.out.println(th.getName());
+		String prefix = "";
+		int i = deeps;
+		while(i-- > 0) prefix += " ";
+
+		for(Thread th: ThreadList) {
+			if(th != null)
+				System.out.println(prefix + th.getName());
+		}
 		for(ThreadGroup g: GroupList) {
-			System.out.println(g.getName());		//グループ名表示
+			System.out.println(prefix + g.getName());		//グループ名表示
 			recursiveShow(g, deeps + 1);			//階層を下げて再帰呼び出し
 		}
 	}
