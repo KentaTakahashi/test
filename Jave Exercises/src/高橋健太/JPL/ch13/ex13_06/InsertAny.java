@@ -1,10 +1,12 @@
-package 高橋健太.JPL.ch13.ex13_05;
+package 高橋健太.JPL.ch13.ex13_06;
 
 import java.util.regex.Pattern;
 
-public class InsertComma{
+public class InsertAny{
 
-	public static String myInsert(String input) {
+	public static String myInsert(String input, char insertChar, int digit) {
+
+		if(digit <= 0) return input;//区切り桁数が正でない場合、inputをそのまま返す
 
 		StringBuilder str = new StringBuilder(input);//insert処理を行いたいのでStringBuilderに変換
 		int numCount = 0;//連続した数字をカウントする
@@ -20,10 +22,10 @@ public class InsertComma{
 			else
 				numCount = 0;
 
-			//検索対象が4回連続したら、適切な箇所にカンマをinsertし、numCountを減らす
-			if(numCount == 4) {
-				str.insert(index + 1, ",");
-				numCount -= 3;
+			//検索対象がdigit+1回連続したら、適切な箇所にinsertCharをinsertし、numCountを減らす
+			if(numCount == digit + 1) {
+				str.insert(index + 1, insertChar);
+				numCount -= digit;
 			}
 		}
 		return str.toString();
