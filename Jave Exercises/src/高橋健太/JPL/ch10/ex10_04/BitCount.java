@@ -5,8 +5,9 @@ public class BitCount {
 	static public int count(int input) {
 		int cnt = 0;
 		int i = 0;
-		while(i < Integer.SIZE - 1){
-			cnt += (input%2);
+		while(i < Integer.SIZE){
+			if((input & 0x01) == 0x01)
+				cnt++;
 			input = input >> 1;
 			i++;
 		}

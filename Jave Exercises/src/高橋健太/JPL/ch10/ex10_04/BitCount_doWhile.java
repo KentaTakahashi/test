@@ -6,10 +6,11 @@ public class BitCount_doWhile {
 		int cnt = 0;
 		int i = 0;
 		do {
-			cnt += (input%2);
+			if((input & 0x01) == 0x01)
+				cnt++;
 			input = input >> 1;
 			i++;
-		}while(i < Integer.SIZE - 1);
+		}while(i < Integer.SIZE);
 		return cnt;
 	}
 }
