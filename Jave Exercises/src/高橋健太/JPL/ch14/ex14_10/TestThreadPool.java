@@ -1,3 +1,4 @@
+package 高橋健太.JPL.ch14.ex14_10;
 /*
  * Copyright (C) 2012, 2013 RICOH Co., Ltd. All rights reserved.
  */
@@ -22,13 +23,13 @@ public class TestThreadPool {
 	 */
 	private static class CounterTask implements Runnable {
 		private int runCount = 0;
-		
+
 		@Override
 		public synchronized void run() {
 			runCount++;
 			notifyAll();
 		}
-		
+
 		synchronized int waitForRunCount(int count) {
 			while (this.runCount < count) {
 				try {
@@ -40,7 +41,7 @@ public class TestThreadPool {
 			return runCount;
 		}
 	}
-	
+
 	/**
 	 * A simple latch task whose run() method will wait for other threads would
 	 * execute the run() method until the expected number of run() invocations reached.
@@ -48,11 +49,11 @@ public class TestThreadPool {
 	private static class LatchTask implements Runnable {
 		private final int latchCount;
 		private int currentCount = 0;
-		
+
 		LatchTask(int count) {
 			this.latchCount = count;
 		}
-		
+
 		public synchronized void run() {
 			currentCount++;
 			notifyAll();
@@ -64,7 +65,7 @@ public class TestThreadPool {
 				}
 			}
 		}
-		
+
 		synchronized void waitForLatchCount() {
 			while (currentCount < latchCount) {
 				try {
@@ -75,44 +76,44 @@ public class TestThreadPool {
 			}
 		}
 	}
-	
+
 	@Test(expected=IllegalArgumentException.class)
 	public void testConstructorIllegalArgumentFirst() {
 		new ThreadPool(0, 1);
 	}
-	
+
 	@Test(expected=IllegalArgumentException.class)
 	public void testConstructorIllegalArgumentSecond() {
 		new ThreadPool(1, 0);
 	}
-	
+
 	@Test
 	public void testStartAndStop() {
 		ThreadPool tp = new ThreadPool(1,1);
 		tp.start();
 		tp.stop();
 	}
-	
+
 	@Test(expected=IllegalStateException.class)
 	public void testStopBeforeStart() {
 		ThreadPool tp = new ThreadPool(1,1);
 		tp.stop();
 	}
-	
+
 	@Test(expected=IllegalStateException.class)
 	public void testRestartWithoutStop() {
 		ThreadPool tp = new ThreadPool(1,1);
 		tp.start();
 		tp.start();
 	}
-	
+
 	@Test(expected=NullPointerException.class)
 	public void testDispatchNullArgument() {
 		ThreadPool tp = new ThreadPool(1,1);
 		tp.start();
 		tp.dispatch(null);
 	}
-	
+
 	@Test(expected=IllegalStateException.class)
 	public void testDispatchBeforeStart() {
 		ThreadPool tp = new ThreadPool(1,1);
@@ -128,33 +129,33 @@ public class TestThreadPool {
 		t.waitForRunCount(1);
 		tp.stop();
 	}
-	
+
 	@Test
 	public void testSimpleRepeatedDispatch() {
 		ThreadPool tp = new ThreadPool(1,1);
 		tp.start();
 		CounterTask t = new CounterTask();
-		
+
 		for (int i = 0; i < 10; i++)
 			tp.dispatch(t);
-		
+
 		t.waitForRunCount(10);
 		tp.stop();
 	}
-	
+
 	@Test
 	public void testComplexRepeatedDispatch() {
 		ThreadPool tp = new ThreadPool(10,10);
 		tp.start();
 		CounterTask t = new CounterTask();
-		
+
 		for (int i = 0; i < 1000; i++)
 			tp.dispatch(t);
-		
+
 		t.waitForRunCount(1000);
 		tp.stop();
 	}
-	
+
 	@Test
 	public void testComplexRepeatedDispatch2() {
 		ThreadPool tp = new ThreadPool(10,10);
@@ -162,18 +163,18 @@ public class TestThreadPool {
 		CounterTask[] tasks = new CounterTask[10];
 		for (int i = 0; i < tasks.length; i++)
 			tasks[i] = new CounterTask();
-		
+
 		for (int i = 0; i < 100; i++) {
 			for (CounterTask t: tasks)
 				tp.dispatch(t);
 		}
-		
+
 		for (CounterTask t: tasks)
 			t.waitForRunCount(100);
-				
+
 		tp.stop();
 	}
-	
+
 	@Test
 	public void testLatchSimpleDispatch() {
 		final int numberOfThreads = 10;
@@ -183,45 +184,45 @@ public class TestThreadPool {
 
 		for (int i = 0; i < numberOfThreads; i++)
 			tp.dispatch(t);
-		
+
 		t.waitForLatchCount();
 		tp.stop();
 	}
-	
+
 	@Test
 	public void testQueueSize() {
-		
+
 		final int sizeOfQueue = 10;
 		ThreadPool tp = new ThreadPool(sizeOfQueue, 1);
 		tp.start();
-		
+
 		// How do I implement this test method ?
-		
+
 		tp.stop();
 	}
-	
+
 	@Test
 	public void testLatchComplexDispatch() {
 		final int numberOfThreads = 10;
 		ThreadPool tp = new ThreadPool(10,numberOfThreads);
 		tp.start();
-		
+
 		LatchTask[] tasks = new LatchTask[10];
-		for (int i = 0; i < tasks.length; i++) 
+		for (int i = 0; i < tasks.length; i++)
 			tasks[i] = new LatchTask(numberOfThreads);
-		
+
 		for (LatchTask t: tasks) {
 			for (int i = 0; i < numberOfThreads; i++) {
 				tp.dispatch(t);
 			}
 		}
-		
+
 		for (LatchTask t: tasks)
 			t.waitForLatchCount();
-				
+
 		tp.stop();
 	}
-	
+
 	@Test
 	public void testNumberOfThreads() {
 		final Set<Thread> threads = Collections.synchronizedSet(new HashSet<Thread>());
@@ -236,23 +237,23 @@ public class TestThreadPool {
 				}
 			}
 		};
-		
+
 		final int numberOfThreads = 10;
 		ThreadPool tp = new ThreadPool(10,numberOfThreads);
 		tp.start();
 		for (int i = 0; i < numberOfThreads; i++)
 			tp.dispatch(task);
-		
+
 		// By the specification, stop() will wait for the terminations of all threads.
 		tp.stop();
-		
+
 		assertEquals(numberOfThreads, threads.size());
 	}
-	
+
 	@Test
 	public void testTerminationOfThreads() {
 		final List<Thread> threads = Collections.synchronizedList(new ArrayList<Thread>());
-		
+
 		Runnable task = new Runnable() {
 			@Override
 			public void run() {
@@ -268,7 +269,7 @@ public class TestThreadPool {
 				}
 			}
 		};
-		
+
 		final int numberOfThreads = 10;
 		ThreadPool tp = new ThreadPool(10,numberOfThreads);
 		tp.start();
@@ -276,7 +277,7 @@ public class TestThreadPool {
 			tp.dispatch(task);
 		// By the specification, stop() will wait for the terminations of all threads.
 		tp.stop();
-		
+
 		assertEquals(numberOfThreads, threads.size());
 		for (Thread t: threads)
 			assertFalse(t.isAlive());
