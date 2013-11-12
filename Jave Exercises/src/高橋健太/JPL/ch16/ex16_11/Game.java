@@ -1,7 +1,16 @@
 package 高橋健太.JPL.ch16.ex16_11;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 public class Game {
+
+	static List<String> nameList = Arrays.asList("SimplePlayer", "RandomPlayer", "CenterPlayer");
+	static int index = 0;
+
+	public boolean isWin = false;
+
 	public static void main(String[] args) {
 		String name;
 
@@ -19,15 +28,16 @@ public class Game {
 		}
 	}
 	private void reportScore(String name) {
-		// TODO 自動生成されたメソッド・スタブ
-
+		String res = (isWin? "Win": "Lose");
+		System.out.println(name + res);
 	}
 	private static void reportException(String name, Exception e) {
-		// TODO 自動生成されたメソッド・スタブ
-
+		System.out.println(name + " cant Load");
 	}
 	private static String getNextPlayer() {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+		if(index < nameList.size())
+			return nameList.get(index++);
+		else
+			return null;
 	}
 }
