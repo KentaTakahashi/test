@@ -1,11 +1,15 @@
-package 高橋健太.JPL.ch16.ex16_11;
+package 高橋健太.JPL.ch16.ex16_11.server;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
 public class PlayerLoader extends ClassLoader{
 
-	static final String LocalPass = "C:\\Users\\z00s000704\\git\\test\\Jave Exercises\\bin\\高橋健太\\JPL\\ch16\\ex16_11";
+	PlayerLoader() {
+		super();
+	}
+	static final String LocalPass = new File(".").getAbsoluteFile().getParent() + "\\";
 
 	@Override
 	protected Class<?> findClass(String name)
@@ -21,23 +25,28 @@ public class PlayerLoader extends ClassLoader{
 	private byte[] bytesForClass(String name)
 			throws IOException, ClassNotFoundException {
 		FileInputStream in = null;
+		byte[] buf = null;
 		try {
-			in = streamFor(name + ".class");
+			in = streamFor(name);
 			int length = in.available();
 			if(length == 0)
 				throw new ClassNotFoundException(name);
-			byte[] buf = new byte[length];
+			buf = new byte[length];
 			in.read(buf);
-			return buf;
-		} finally {
+		} catch(IOException e) {
+			System.out.println(e.toString());
+			throw new IOException(e);
+		}finally {
 			if(in != null)
 				in.close();
 		}
+		return buf;
 	}
 
 	private FileInputStream streamFor(String string) throws IOException {
-		System.out.println(LocalPass + string);
-		return new FileInputStream(LocalPass + "\\" + string);
+		string = string.replace(".", "\\");
+		string += ".class";
+		return new FileInputStream(LocalPass + string);
 	}
 
 }
