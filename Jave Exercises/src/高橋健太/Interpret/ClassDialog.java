@@ -12,12 +12,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 public class ClassDialog extends Dialog implements ActionListener {
 
 	MainFrame owner;
 	Class<?> cls;
 	List constructorList = new List(20);
+	java.util.List<Constructor> constructorListUtil = new ArrayList<Constructor>();
+	java.util.List<Object> argsList = new ArrayList<Object>();
 
 	public ClassDialog(String class_str, Frame owner) {
 		super(owner);
@@ -31,6 +36,7 @@ public class ClassDialog extends Dialog implements ActionListener {
 			for (Constructor<?> cl : cls.getDeclaredConstructors()){
 				cl.setAccessible(true);
 				constructorList.add(cl.toString());
+				constructorListUtil.add(cl);
 			}
 		} catch (ClassNotFoundException e1) {
 			e1.printStackTrace();
@@ -61,12 +67,29 @@ public class ClassDialog extends Dialog implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		//String cmdName=e.getActionCommand();
+		int index = constructorList.getSelectedIndex();
+		Constructor<?> cl = constructorListUtil.get(index);
+		Type[] types = cl.getGenericParameterTypes();
+
+		System.out.println(types.length);
+
+		//コンストラクターの引数をダイアログから入力、argsListに格納
+		for(Type t:types) {
+			SetParameterDialog d = new SetParameterDialog(t, this, owner.getObjectList(), owner.getobjectListUtil());
+			argsList.add(d.getParam());
+		}
+
+		//設定した引数でオブジェクトを作成し、ownerのオブジェクトリストに追加登録
 		try {
-			owner.addObject(cls.newInstance());
+			Object[] args = argsList.toArray();
+			owner.addObject(cl.newInstance(args));
 		} catch (InstantiationException e1) {
 			e1.printStackTrace();
 		} catch (IllegalAccessException e1) {
+			e1.printStackTrace();
+		} catch (IllegalArgumentException e1) {
+			e1.printStackTrace();
+		} catch (InvocationTargetException e1) {
 			e1.printStackTrace();
 		} finally {
 			dispose();

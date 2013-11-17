@@ -13,6 +13,7 @@ import java.awt.event.WindowEvent;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class ObjectDialog extends Dialog implements ActionListener {
@@ -24,6 +25,7 @@ public class ObjectDialog extends Dialog implements ActionListener {
 	List methodList = new List(15);
 	java.util.List<Field> fieldListUtil = new ArrayList<Field>();
 	java.util.List<Method> methodListtUtil = new ArrayList<Method>();
+	java.util.List<Object> argsList = new ArrayList<Object>();
 	Button field_select, method_select;
 
 	public ObjectDialog(Object obj, Frame owner) {
@@ -38,17 +40,23 @@ public class ObjectDialog extends Dialog implements ActionListener {
 		//この Objectの実行時クラスを取得
 		cls = obj.getClass();
 
-		//この Objectのフィールド名とフィールドオブジェクトをリストに格納
-		for (Field f : cls.getDeclaredFields()){
-			f.setAccessible(true);
-			fieldList.add(f.toString());
-			fieldListUtil.add(f);
-		}
-		//この Objectのメソッド名とメソッドオブジェクトをリストに格納
-		for (Method m : cls.getDeclaredMethods()){
-			m.setAccessible(true);
-			methodList.add(m.toString());
-			methodListtUtil.add(m);
+
+		Class<?> c = cls;
+		while(c != null) {
+			//この Objectと継承元のフィールド名とフィールドオブジェクトをリストに格納
+			for (Field f : c.getDeclaredFields()){
+				f.setAccessible(true);
+				fieldList.add(f.toString());
+				fieldListUtil.add(f);
+			}
+			//この Objectと継承元のメソッド名とメソッドドオブジェクトをリストに格納
+			for (Method m : c.getDeclaredMethods()){
+				m.setAccessible(true);
+				methodList.add(m.toString());
+				methodListtUtil.add(m);
+				//System.out.println(m.toString());
+			}
+			c = c.getSuperclass();
 		}
 
 		setTitle("ObjectDialog");
@@ -94,16 +102,23 @@ public class ObjectDialog extends Dialog implements ActionListener {
 
 		} else if("Method 選択".equals(cmdName)){
 			int index = methodList.getSelectedIndex();
+
 			try {
-				methodListtUtil.get(index).invoke(obj, null);
+				Method m = methodListtUtil.get(index);
+				Type[] types = m.getParameterTypes();
+				//コンストラクターの引数をダイアログから入力、argsListに格納
+				for(Type t:types) {
+					SetParameterDialog d = new SetParameterDialog(t, this, owner.getObjectList(), owner.getobjectListUtil());
+					argsList.add(d.getParam());
+				}
+				Object[] args = argsList.toArray();
+
+				methodListtUtil.get(index).invoke(obj, args);
 			} catch (IllegalArgumentException e1) {
-				// TODO 自動生成された catch ブロック
 				e1.printStackTrace();
 			} catch (IllegalAccessException e1) {
-				// TODO 自動生成された catch ブロック
 				e1.printStackTrace();
 			} catch (InvocationTargetException e1) {
-				// TODO 自動生成された catch ブロック
 				e1.printStackTrace();
 			}
 

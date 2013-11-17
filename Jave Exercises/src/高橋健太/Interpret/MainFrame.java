@@ -74,6 +74,14 @@ public class MainFrame extends Frame implements ActionListener{
 	public void addObject(Object obj) {
 		objectListUtil.add(obj);
 		objectList.add(obj.toString());
-
+	}
+	public List getObjectList() {
+		List copyList = new List(15);
+		for(int i = 0;i < objectList.getItemCount(); i++ )
+			copyList.add(objectList.getItem(i));
+		return copyList;
+	}
+	public java.util.List<Object> getobjectListUtil() {
+		return objectListUtil;
 	}
 }

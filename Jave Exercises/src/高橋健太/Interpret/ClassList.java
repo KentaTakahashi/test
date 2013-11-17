@@ -11,6 +11,7 @@ public class ClassList {
 			"----------------デモ用------------------------------------------------",
 			"高橋健太.Interpret.Main",
 			"java.awt.Frame",
+			"java.awt.Color",
 			"----------------以下javadocから転記-----------------------------------",
 			"java.lang.Object",
 			"javax.swing.AbstractAction",
