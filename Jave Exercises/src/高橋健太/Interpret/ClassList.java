@@ -10,6 +10,7 @@ public class ClassList {
 		return Arrays.asList(
 			"----------------デモ用------------------------------------------------",
 			"高橋健太.Interpret.Main",
+			"高橋健太.Interpret.Demo",
 			"java.awt.Frame",
 			"java.awt.Color",
 			"----------------以下javadocから転記-----------------------------------",

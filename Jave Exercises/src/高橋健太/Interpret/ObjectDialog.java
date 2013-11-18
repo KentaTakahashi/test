@@ -26,7 +26,7 @@ public class ObjectDialog extends Dialog implements ActionListener {
 	java.util.List<Field> fieldListUtil = new ArrayList<Field>();
 	java.util.List<Method> methodListtUtil = new ArrayList<Method>();
 	java.util.List<Object> argsList = new ArrayList<Object>();
-	Button field_select, method_select;
+	Button field_check, field_select, method_select;
 
 	public ObjectDialog(Object obj, Frame owner) {
 		super(owner);
@@ -39,7 +39,6 @@ public class ObjectDialog extends Dialog implements ActionListener {
 
 		//この Objectの実行時クラスを取得
 		cls = obj.getClass();
-
 
 		Class<?> c = cls;
 		while(c != null) {
@@ -73,19 +72,25 @@ public class ObjectDialog extends Dialog implements ActionListener {
         gbl.setConstraints(fieldList, gbc);
 		add(fieldList);
 
-		field_select = new Button("Field 選択");
+		field_check = new Button("Field 現在値の確認");
 		gbc.gridy = 1;
+        gbl.setConstraints(field_check, gbc);
+		add(field_check);
+		field_check.addActionListener(this);
+
+		field_select = new Button("Field 選択");
+		gbc.gridy = 2;
         gbl.setConstraints(field_select, gbc);
 		add(field_select);
 		field_select.addActionListener(this);
 
 		methodList.setSize(800, 300);
-		gbc.gridy = 2;
+		gbc.gridy = 3;
         gbl.setConstraints(methodList, gbc);
 		add(methodList);
 
 		method_select = new Button("Method 選択");
-		gbc.gridy = 3;
+		gbc.gridy = 4;
         gbl.setConstraints(method_select, gbc);
 		add(method_select);
 		method_select.addActionListener(this);
@@ -96,17 +101,36 @@ public class ObjectDialog extends Dialog implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String cmdName=e.getActionCommand();
-		if("Field 選択".equals(cmdName)){
-			int index = fieldList.getSelectedIndex();
-			new FieldDialog(fieldListUtil.get(index), obj, this);
-
-		} else if("Method 選択".equals(cmdName)){
-			int index = methodList.getSelectedIndex();
-
+		if("Field 現在値の確認".equals(cmdName)){
 			try {
+				int index = fieldList.getSelectedIndex();
+				Field f = fieldListUtil.get(index);
+				f.setAccessible(true);
+				new MessageDialog(f.get(obj).toString(), this);
+			} catch (IllegalArgumentException e1) {
+				e1.printStackTrace();
+			} catch (IllegalAccessException e1) {
+				e1.printStackTrace();
+			}
+		} else if("Field 選択".equals(cmdName)){
+			try {
+				int index = fieldList.getSelectedIndex();
+				Field f = fieldListUtil.get(index);
+				Class<?> cls = f.getType();
+				SetParameterDialog d = new SetParameterDialog(cls, this, owner.getObjectList(), owner.getobjectListUtil());
+				f.setAccessible(true);
+				f.set(obj, d.getParam());
+			} catch (IllegalArgumentException e1) {
+				e1.printStackTrace();
+			} catch (IllegalAccessException e1) {
+				e1.printStackTrace();
+			}
+		} else if("Method 選択".equals(cmdName)){
+			try {
+				int index = methodList.getSelectedIndex();
 				Method m = methodListtUtil.get(index);
 				Type[] types = m.getParameterTypes();
-				//コンストラクターの引数をダイアログから入力、argsListに格納
+				//メドッドの引数をダイアログから入力、argsListに格納
 				for(Type t:types) {
 					SetParameterDialog d = new SetParameterDialog(t, this, owner.getObjectList(), owner.getobjectListUtil());
 					argsList.add(d.getParam());
@@ -121,8 +145,7 @@ public class ObjectDialog extends Dialog implements ActionListener {
 			} catch (InvocationTargetException e1) {
 				e1.printStackTrace();
 			}
-
-			dispose();
+			//dispose();
 		}
 	}
 }

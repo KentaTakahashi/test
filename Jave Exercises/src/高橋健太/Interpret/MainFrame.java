@@ -67,7 +67,11 @@ public class MainFrame extends Frame implements ActionListener{
 			new ClassDialog(classList.getSelectedItem(), this);
 		} else if("選択したオブジェクトのプロパティを表示".equals(cmdName)){
 			int index = objectList.getSelectedIndex();
-			new ObjectDialog(objectListUtil.get(index), this);
+			Object obj = objectListUtil.get(index);
+			if(obj.getClass().isArray())
+				new ArraytDialog(obj, this);
+			else
+				new ObjectDialog(obj, this);
 		}
 	}
 
