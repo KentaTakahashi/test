@@ -1,11 +1,10 @@
 package 高橋健太.JPL.ch16.ex16_09;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Member;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 
 public final class ClassContents {
 
@@ -13,6 +12,7 @@ public final class ClassContents {
 	private static String str;
 
 	public  ClassContents(){}
+	public  ClassContents(int i, int j){}
 
 	public static void main(String[] args) {
 		try {
@@ -47,34 +47,54 @@ public final class ClassContents {
 
 			//Constructor宣言
 			System.out.println("");
-			for (Constructor<?> cons : c.getConstructors()){
+			for (Constructor<?> cons : c.getDeclaredConstructors()){
 				cons.setAccessible(true);
+
+				//parm格納
+				Type[] types = cons.getGenericParameterTypes();
+				String parm = "(";
+				for(Type t:types) {
+					parm += stripPrefix(t.toString()) + ", ";
+				}
+				if(parm.length() > 2)parm = parm.substring(0, parm.length() - 2);
+				parm += ")";
+
 				System.out.println(
 						"\t"
 						+ addModifier(cons.getModifiers())
 						+ " "
 						+ stripPrefix(cons.toString())
+						+ parm
 						+ " {}");
 			}
 
+			//Methods宣言
+			System.out.println("");
+			for (Method m : c.getDeclaredMethods()){
+				m.setAccessible(true);
 
-			printMembers(c.getFields());
-			printMembers(c.getConstructors());
-			printMembers(c.getMethods());
+				//parm格納
+				Type[] types = m.getGenericParameterTypes();
+				String parm = "(";
+				for(Type t:types) {
+					parm += stripPrefix(t.toString()) + ", ";
+				}
+				if(parm.length() > 2)parm = parm.substring(0, parm.length() - 2);
+				parm += ")";
+
+				System.out.println(
+						"\t"
+						+ addModifier(m.getModifiers())
+						+ stripPrefix(m.getGenericReturnType().toString())
+						+ " "
+						+ stripPrefix(m.toString())
+						+ parm
+						+ " {}");
+			}
+
+			System.out.println("}");
 		} catch(ClassNotFoundException e) {
 			System.err.println(e); //report the error
-		}
-	}
-	private static void printMembers(Member[] mems) {
-		for(Member m: mems) {
-			if(m.getDeclaringClass() == Object.class)
-				continue;
-			String decl = m.toString();
-			for(Annotation anno: ((AnnotatedElement) m).getAnnotations())
-				System.out.println(" " + anno.toString());
-
-			System.out.print(" ");
-			System.out.println(strip(decl, "java.lang."));
 		}
 	}
 	private static String strip(String str, String stripStr) {
@@ -110,6 +130,9 @@ public final class ClassContents {
 		return ret;
 	}
 	private static String stripPrefix(String str) {
+
+		str = str.replaceAll("\\(.+?\\)", "");
+
 		String[] strs = str.split("\\.");
 		return strs[strs.length - 1];
 	}

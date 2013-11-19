@@ -85,9 +85,8 @@ public class ClassDialog extends Dialog implements ActionListener {
 
 		int index = constructorList.getSelectedIndex();
 		Constructor<?> cl = constructorListUtil.get(index);
+		cl.setAccessible(true);
 		Type[] types = cl.getGenericParameterTypes();
-
-		System.out.println(types.length);
 
 		//コンストラクターの引数をダイアログから入力、argsListに格納
 		for(Type t:types) {
