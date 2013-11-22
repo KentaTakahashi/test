@@ -112,7 +112,7 @@ public class ExtendsClock extends Frame implements Runnable {
 		}
 		*/
 		load();//プリファレンスのロード
-		//setSize(100, 100);
+		setSize(100, 100);
 		setLocation(current_X, current_Y);
 		setVisible(true);						//Windowを表示に設定
 	}
