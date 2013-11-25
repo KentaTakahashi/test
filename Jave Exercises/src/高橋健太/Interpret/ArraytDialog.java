@@ -43,6 +43,7 @@ public class ArraytDialog extends Dialog implements ActionListener {
 		}
 		setTitle("ArraytDialog");
 
+		setBounds(100, 100, 0, 0);
 		setLayout(gbl);
 
 		// (0, 0) 幅=70, 高さ=15

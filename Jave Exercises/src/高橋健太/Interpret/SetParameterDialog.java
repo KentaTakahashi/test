@@ -38,6 +38,7 @@ public class SetParameterDialog extends Dialog implements ActionListener {
 
 		setTitle("SetParameterDialog");
 
+		setBounds(200, 200, 0, 0);
 		setLayout(gbl);
 
 		// (0, 0) 幅=70, 高さ=1

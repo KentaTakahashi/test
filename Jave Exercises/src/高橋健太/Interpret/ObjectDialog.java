@@ -73,6 +73,8 @@ public class ObjectDialog extends Dialog implements ActionListener, TextListener
 		}
 
 		setTitle("ObjectDialog");
+
+		setBounds(100, 100, 0, 0);
 		setLayout(gbl);
 
 		limitFieldList = new LimitList(fieldList, fieldListUtil);

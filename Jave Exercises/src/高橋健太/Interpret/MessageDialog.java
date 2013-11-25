@@ -2,9 +2,7 @@ package 高橋健太.Interpret;
 
 import java.awt.Button;
 import java.awt.Dialog;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,6 +10,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class MessageDialog extends Dialog implements ActionListener {
+
+	GridBagLayout gbl = new GridBagLayout();
 
 	public MessageDialog(String message, Dialog owner) {
 		super(owner);
@@ -22,26 +22,23 @@ public class MessageDialog extends Dialog implements ActionListener {
 		});
 
 		setTitle("MessageDialog");
-		setSize(400, 100);
 
-		GridBagLayout gbl = new GridBagLayout();
+		setBounds(200, 200, 0, 0);
 		setLayout(gbl);
 
-		Insets insets = new Insets(0, 0, 0, 0);
-		//GridBagConstraints(int gridx, int gridy, int gridwidth, int gridheight, double weightx, double weighty, int anchor, int fill, Insets insets, int ipadx, int ipady)
-		GridBagConstraints gbc = new GridBagConstraints(0, 0, 1, 1, 600.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0);
-
-		gbc.gridy = 0;
+		// (0, 0) 幅=50, 高さ=1
 		Label label = new Label(message);
-        gbl.setConstraints(label, gbc);
-        add(label);
+		gbl.setConstraints(label, MainFrame.setGBC(0, 0, 50, 1));
+		add(label);
 
-		gbc.gridy = 1;
+		// (0, 1) 幅=50, 高さ=1
 		Button ok_btn = new Button("OK");
-        gbl.setConstraints(ok_btn, gbc);
+		gbl.setConstraints(ok_btn, MainFrame.setGBC(0, 1, 50, 1));
 		add(ok_btn);
+
 		ok_btn.addActionListener(this);
 
+		pack();
 		setModal(true);
         setVisible(true);
 	}

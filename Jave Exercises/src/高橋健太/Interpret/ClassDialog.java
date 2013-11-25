@@ -92,6 +92,7 @@ public class ClassDialog extends Dialog implements ActionListener, TextListener 
 		limitFieldList = new LimitList(fieldList, fieldListUtil);
 		limitMethodList = new LimitList(methodList, methodListUtil);
 
+		setBounds(100, 100, 0, 0);
 		setLayout(gbl);
 
 		/************* Constructor Layout登録 **************/
