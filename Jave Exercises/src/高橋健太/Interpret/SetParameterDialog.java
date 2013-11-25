@@ -2,9 +2,7 @@ package 高橋健太.Interpret;
 
 import java.awt.Button;
 import java.awt.Dialog;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.Label;
 import java.awt.List;
 import java.awt.TextField;
@@ -16,12 +14,15 @@ import java.lang.reflect.Type;
 
 public class SetParameterDialog extends Dialog implements ActionListener {
 
-	private Dialog owner;
+	Dialog owner;
 	List objectList;
 	java.util.List<Object> objectListUtil;
-	private Type type;
-	private TextField text;
-	private Object parm = null;
+	Type type;
+	TextField text = new TextField(70);//70列幅のテキストフィールド作成
+	Object parm = null;
+	Button ok_btn = new Button("パラメータ設定");
+
+	GridBagLayout gbl = new GridBagLayout();
 
 	public SetParameterDialog(Type type, Dialog owner, List objectList, java.util.List<Object> objectListUtil) {
 		super(owner);
@@ -36,41 +37,34 @@ public class SetParameterDialog extends Dialog implements ActionListener {
 		});
 
 		setTitle("SetParameterDialog");
-		setSize(800, 600);
 
-		GridBagLayout gbl = new GridBagLayout();
 		setLayout(gbl);
 
-		Insets insets = new Insets(0, 0, 0, 0);
-		//GridBagConstraints(int gridx, int gridy, int gridwidth, int gridheight, double weightx, double weighty, int anchor, int fill, Insets insets, int ipadx, int ipady)
-		GridBagConstraints gbc = new GridBagConstraints(0, 0, 1, 1, 600.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, insets, 0, 0);
-
-
-		gbc.gridy = 0;
+		// (0, 0) 幅=70, 高さ=1
 		Label label = new Label("パラメータタイプ: " + type.toString());
-        gbl.setConstraints(label, gbc);
-        add(label);
+		gbl.setConstraints(label, MainFrame.setGBC(0, 0, 70, 1));
+		add(label);
 
-		gbc.gridy = 1;
-		text = new TextField();
-		gbl.setConstraints(text, gbc);
+		// (0, 1) 幅=70, 高さ=1
+		gbl.setConstraints(text, MainFrame.setGBC(0, 1, 70, 1));
 		add(text);
 
-		gbc.gridy = 2;
+		// (0, 2) 幅=70, 高さ=1
 		Label label_2 = new Label("生成済みのオブジェクトリスト");
-        gbl.setConstraints(label_2, gbc);
-        add(label_2);
+		gbl.setConstraints(label_2, MainFrame.setGBC(0, 2, 70, 1));
+		add(label_2);
 
-        gbc.gridy = 3;
-        gbl.setConstraints(objectList, gbc);
-        add(objectList);
+		// (0, 3) 幅=70, 高さ=15
+		gbl.setConstraints(objectList, MainFrame.setGBC(0, 3, 70, 15));
+		add(objectList);
 
-		gbc.gridy = 4;
-		Button ok_btn = new Button("パラメータ設定");
-        gbl.setConstraints(ok_btn, gbc);
+		// (0, 19) 幅=70, 高さ=1
+		gbl.setConstraints(ok_btn, MainFrame.setGBC(0, 19, 10, 1));
 		add(ok_btn);
+
 		ok_btn.addActionListener(this);
 
+		pack();
 		setModal(true);
         setVisible(true);
 	}

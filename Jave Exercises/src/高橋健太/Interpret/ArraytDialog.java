@@ -3,7 +3,6 @@ package 高橋健太.Interpret;
 import java.awt.Button;
 import java.awt.Dialog;
 import java.awt.Frame;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.List;
 import java.awt.event.ActionEvent;
@@ -19,7 +18,10 @@ public class ArraytDialog extends Dialog implements ActionListener {
 	Object array;
 	List objectList = new List(15);
 	java.util.List<Object> objectListUtil = new ArrayList<Object>();
-	Button object_select;
+	Button arrayGetButton = new Button("array要素表示");
+	Button arraySetButton = new Button("array要素設定");
+
+	GridBagLayout gbl = new GridBagLayout();
 
 	public ArraytDialog(Object array, Frame owner) {
 		super(owner);
@@ -32,43 +34,64 @@ public class ArraytDialog extends Dialog implements ActionListener {
 
 		//この Objectの実行時クラスを取得
 		for(int i = 0; i < Array.getLength(array); i++) {
-			objectList.add((Array.get(array, i).toString()));
-			objectListUtil.add(Array.get(array, i));
+			Object o = Array.get(array, i);
+			if(o !=null)
+				objectList.add(o.toString());
+			else
+				objectList.add("null");
+			objectListUtil.add(o);
 		}
 		setTitle("ArraytDialog");
-		setSize(1024, 768);
 
-		GridBagLayout gbl = new GridBagLayout();
 		setLayout(gbl);
 
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-
-		objectList.setSize(800, 300);
-		gbc.gridy = 0;
-	    gbl.setConstraints(objectList, gbc);
+		// (0, 0) 幅=70, 高さ=15
+		gbl.setConstraints(objectList, MainFrame.setGBC(0, 0, 70, 15));
 		add(objectList);
 
-		object_select = new Button("Object 選択");
-		gbc.gridy = 1;
-	    gbl.setConstraints(object_select, gbc);
-		add(object_select);
-		object_select.addActionListener(this);
+		// (70, 0) 幅=1, 高さ=1
+		gbl.setConstraints(arrayGetButton, MainFrame.setGBC(70, 0, 1, 1));
+		add(arrayGetButton);
 
+		// (70, 1) 幅=1, 高さ=1
+		gbl.setConstraints(arraySetButton, MainFrame.setGBC(70, 1, 1, 1));
+		add(arraySetButton);
+
+		/************* Listener登録 **************/
+		arrayGetButton.addActionListener(this);
+		arraySetButton.addActionListener(this);
+
+		pack();
 		setVisible(true);
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String cmdName=e.getActionCommand();
-		if("Object 選択".equals(cmdName)){
-			int index = objectList.getSelectedIndex();
-			Object obj = objectListUtil.get(index);
-
-			if(obj.getClass().isArray())
-				new ArraytDialog((Object[])obj, owner);
-			else
-				new ObjectDialog(obj, owner);
-			//dispose();
+		if ("array要素表示".equals(cmdName)) {
+			getArray‎Element();
+		} else if("array要素設定".equals(cmdName)) {
+			setArray‎Element();
 		}
+	}
+	private void getArray‎Element() {
+		int index = objectList.getSelectedIndex();
+		Object obj = objectListUtil.get(index);
+
+		if(obj.getClass().isArray())
+			new ArraytDialog((Object[])obj, owner);
+		else
+			new ObjectDialog(obj, owner);
+	}
+	private void setArray‎Element() {
+		int index = objectList.getSelectedIndex();
+		SetParameterDialog d = new SetParameterDialog(array.getClass(), this, owner.getObjectList(), owner.getobjectListUtil());
+		Array.set(array, index, d.getParam());
+
+		remove(objectList);
+		// (0, 0) 幅=70, 高さ=15
+		gbl.setConstraints(objectList, MainFrame.setGBC(0, 0, 70, 15));
+		add(objectList);
+		pack();
+		setVisible(true);
 	}
 }
