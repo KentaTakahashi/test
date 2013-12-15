@@ -1,0 +1,15 @@
+APPLE初期化
+APPLE = 1
+
+BERRY初期化
+BERRY = 2
+
+CAKE初期化
+CAKE = 5
+
+APPLE + 3
+APPLE - 2
+CAKE + 1
+APPLE = 2
+BERRY + 2
+CAKE - 100
