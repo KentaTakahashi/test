@@ -203,12 +203,24 @@ public class ClassDialog extends Dialog implements ActionListener, TextListener 
 		try {
 			int index = fieldList.getSelectedIndex();
 			Field f = (Field)limitFieldList.getObject(index);
+
+			//読み込み対象FieldのModifierを取得し、final修飾子を取り外す
 			f.setAccessible(true);
+			int modifiers = f.getModifiers();
+			Field modifierField = f.getClass().getDeclaredField("modifiers");
+			modifiers = modifiers & ~Modifier.FINAL;
+			modifierField.setAccessible(true);
+			modifierField.setInt(f, modifiers);
+
 			new MessageDialog(f.get(null).toString(), this);
 		} catch (IllegalArgumentException e1) {
 			e1.printStackTrace();
 		} catch (IllegalAccessException e1) {
 			e1.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
 		}
 	}
 	private void setField() {
