@@ -14,6 +14,7 @@ public class PlayerLoader extends ClassLoader{
 	@Override
 	protected Class<?> findClass(String name)
 			throws ClassNotFoundException {
+		System.out.println("Call my findClass");
 		try {
 			byte[] buf = bytesForClass(name);
 			return defineClass(name, buf, 0, buf.length);
