@@ -1,0 +1,11 @@
+Show Long String CSV BenchMark!
+MyCSVTokenizer         : 128ms
+MySimpleReaderTokenizer: 93ms
+MySimpleSplitTokenizer : 87ms
+MyStringTokenizer      : 86ms
+
+Show Short String CSV BenchMark!
+MyCSVTokenizer         : 83ms
+MySimpleReaderTokenizer: 85ms
+MySimpleSplitTokenizer : 84ms
+MyStringTokenizer      : 84ms

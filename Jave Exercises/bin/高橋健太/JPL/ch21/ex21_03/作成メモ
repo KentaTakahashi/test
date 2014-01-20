@@ -1,0 +1,49 @@
+WeakHashMapの実装
+・hashは配列構造で持つ
+・イテレーション実行時は、現在参照しているKeyと次のKeyのみ強い参照を持つことでnull参照を回避している
+・参照切れの際は配列を適時詰める、
+
+
+
+
+
+    /**
+     * Expunges stale entries from the table.
+     */
+    private void expungeStaleEntries()
+
+
+
+
+    /**
+     * The entries in this hash table extend WeakReference, using its main ref
+     * field as the key.
+     */
+    private static class Entry<K,V> extends WeakReference<Object> implements Map.Entry<K,V>
+
+
+
+    private abstract class HashIterator<T> implements Iterator<T> {
+        private int index;
+        private Entry<K,V> entry = null;
+        private Entry<K,V> lastReturned = null;
+        private int expectedModCount = modCount;
+
+        /**
+         * Strong reference needed to avoid disappearance of key
+         * between hasNext and next
+         */
+        private Object nextKey = null;
+
+        /**
+         * Strong reference needed to avoid disappearance of key
+         * between nextEntry() and any use of the entry
+         */
+        private Object currentKey = null;
+
+
+
+
+ 設計メモ
+ ・イテレーション時にhasNextでtrueを返したら、nextはnull以外の値を返す
+ 　→イテレーション実行時（Iteratorオブジェクト保有時）はIteratorがすべての値に対する強い参照を持つ
