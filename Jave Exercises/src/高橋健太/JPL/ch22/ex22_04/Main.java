@@ -6,7 +6,7 @@ public class Main {
 		AttributedImpl ai = new AttributedImpl();
 		Eye eye = new Eye(ai);
 
-		ai.add(new Attr());
+		ai.add(new Attr(""));
 		ai.remove(null);
 	}
 
