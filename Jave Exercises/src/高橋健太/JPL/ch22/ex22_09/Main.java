@@ -29,14 +29,14 @@ public class Main {
 		}
 	}
 	private static void showBenchMark(Readable source) throws IOException {
-		System.out.println("MyCSVTokenizer         : " + benchmarkMyCSVTokenizer(source)          + "ms");
+		//System.out.println("MyCSVTokenizer         : " + benchmarkMyCSVTokenizer(source)          + "ms");
 		System.out.println("MySimpleReaderTokenizer: " + benchmarkMySimpleReaderTokenizer(source) + "ms");
 		System.out.println("MySimpleSplitTokenizer : " + benchmarkMySimpleSplitTokenizer(source)  + "ms");
 		System.out.println("MyStringTokenizer      : " + benchmarkMyStringTokenizer(source)       + "ms");
 	}
 
 
-
+/*
 	private static long benchmarkMyCSVTokenizer(Readable source) throws IOException {
 		long start = System.currentTimeMillis();
 		int i = 0;
@@ -44,6 +44,7 @@ public class Main {
 		long stop = System.currentTimeMillis();
 		return stop - start;
 	}
+*/
 	private static long benchmarkMySimpleReaderTokenizer(Readable source) throws IOException {
 		long start = System.currentTimeMillis();
 		int i = 0;

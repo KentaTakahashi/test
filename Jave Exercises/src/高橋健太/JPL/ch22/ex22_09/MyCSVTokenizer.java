@@ -1,5 +1,5 @@
 package 高橋健太.JPL.ch22.ex22_09;
-
+/*
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -30,3 +30,4 @@ public class MyCSVTokenizer {
 		return vals;
 	}
 }
+*/

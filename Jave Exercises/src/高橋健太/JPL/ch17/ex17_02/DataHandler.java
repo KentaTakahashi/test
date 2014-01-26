@@ -11,7 +11,7 @@ public final class DataHandler {
 	byte[] readFile(File file) {
 		byte[] data;
 
-		if(file.equals(lastData)) {
+		if(file.equals(lastFile.get())) {
 			data = lastData.get();
 			if(data != null) {
 				return data;

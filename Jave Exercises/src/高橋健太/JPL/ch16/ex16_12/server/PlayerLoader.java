@@ -42,6 +42,7 @@ public class PlayerLoader extends ClassLoader{
 	 */
 	@Override
 	protected Enumeration<URL> findResources(String name) throws IOException {
+		System.out.println("Call my findResources");
 		List<URL> urlList = new ArrayList<URL>();
 		String[] names = name.split(":");//:で引数を分割
 		for(String n: names) {//各名前をurlリストに追加
