@@ -1,0 +1,8 @@
+locale	|ja_JP	en_US	en_CA	zh_CN	fr_FR	it_IT
+===================================================
+ja_JP	|￥	JPY	JPY	JPY	JPY	JPY
+en_US	|USD	$	US$	USD	USD	USD
+en_CA	|CAD	CAD	$	CAD	CAD	CAD
+zh_CN	|CNY	CNY	CNY	￥	CNY	CNY
+fr_FR	|EUR	EUR	EUR	EUR	€	€
+it_IT	|EUR	EUR	EUR	EUR	€	€

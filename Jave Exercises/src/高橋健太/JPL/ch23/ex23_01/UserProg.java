@@ -30,8 +30,6 @@ public class UserProg {
 						String str;
 						if((str = bin.readLine()) != null)
 							bout.write(str);
-						//bout.flush();
-						//System.out.println("debug UserProg: " + str);
 						Thread.sleep(10);
 					} catch (IOException e) {
 						System.out.println("IOException: " + e.getMessage());
@@ -53,9 +51,7 @@ public class UserProg {
 						String str;
 						if((str = bin.readLine()) != null) {
 							bout.write(str);
-							//System.out.println("debug UserProg 2: " + str);
 						}
-						//bout.flush();
 						Thread.sleep(10);
 					} catch (IOException e) {
 						e.printStackTrace();

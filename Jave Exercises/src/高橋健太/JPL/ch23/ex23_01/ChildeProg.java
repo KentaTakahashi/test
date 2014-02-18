@@ -19,9 +19,7 @@ public class ChildeProg {
 				String str;
 				if((str = bin.readLine()) != null)
 					bout.write("" + str);
-				//bout.flush();
 				bout.write("ChildeProg");
-				//System.out.println("Start ChildeProg Thred");
 				bout.write("Start ChildeProg Thred");
 				Thread.sleep(10);
 			} catch (IOException e) {
