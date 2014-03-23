@@ -27,11 +27,11 @@ public class MyColorPoint implements MyDrawObject{
 
 	private ColorSpace mColorSpace;
 	private DrawType mDrawType;
-
 	//コンストラクタ
-	public MyColorPoint(ColorCoordinate colorcoordinate, float i, float j, float k, int alpha, ColorSpace colorspace){
+	public MyColorPoint(ColorCoordinate colorcoordinate, float i, float j, float k, int alpha, ColorSpace colorspace, DrawType drawtype){
 
 		mColorSpace = colorspace;
+		mDrawType   = drawtype;
 
 		initWhitePoint(mColorSpace);//座標系変換用のXYZ空間のホワイトポイントを指定の色空間ごとに設定
 
@@ -44,25 +44,25 @@ public class MyColorPoint implements MyDrawObject{
 			initLabmode(i, j, k);
 		}
 		//描画タイプをデフォルトで正六面体とする
-		setDrawType(DrawType.Cube);
+		setDrawType(mDrawType);
 		initDrawObject(alpha);
 	}
-
-	private void initDrawObject(int alpha) {
-		// TODO 自動生成されたメソッド・スタブ
-		if(mDrawType == DrawType.Cube){
-			//mObject = new MyCube(mCordR, mCordG, mCordB, 0.02f, mCordR * 100, mCordG * 100, mCordB * 100);
-			//mObject = new MyCube(mCordX, mCordY, mCordZ, 0.02f, mCordR * 100, mCordG * 100, mCordB * 100);
-			mObject = new MyCube(mCorda/ 100, mCordL / 100, - mCordb/ 100, 0.02f, mCordR * 100, mCordG * 100, mCordB * 100, alpha);
-			//mObject = new MyCube(0, 0, 0, 0.5f, 50, 50, 50);//debug
-		}
+	//コンストラクタのオーバーロード、DrawTypeのデフォルト値はCube
+	public MyColorPoint(ColorCoordinate colorcoordinate, float i, float j, float k, int alpha, ColorSpace colorspace){
+		this(colorcoordinate, i, j, k, 100, ColorSpace.sRGB, DrawType.Cube);
 	}
 
-	//コンストラクタのオーバーライド、colorspaceはデフォルト値はsRGB
+	//コンストラクタのオーバーロード、ColorSpaceのデフォルト値はsRGB
 	public MyColorPoint(ColorCoordinate colorcoordinate, float i, float j, float k){
 		this(colorcoordinate, i, j, k, 100, ColorSpace.sRGB);
 	}
-
+	private void initDrawObject(int alpha) {
+		if(mDrawType == DrawType.Cube){
+			mObject = new MyCube(mCorda / 100, mCordL / 100, - mCordb / 100, 0.02f, mCordR * 100, mCordG * 100, mCordB * 100, alpha);
+		} else if (mDrawType == DrawType.Triangle) {
+			mObject = new MyTriangle(mCorda / 100, mCordL / 100, - mCordb / 100, 0.02f, mCordR * 100, mCordG * 100, mCordB * 100, alpha);
+		}
+	}
 	//コンストラクタ内で呼ばれる初期化関数
 	private void initRGBmode(float r, float g, float b) {
 		mCordR = r;

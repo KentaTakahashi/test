@@ -2,10 +2,9 @@ package com.example.labviewer;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.util.Log;
-
 import com.example.labviewer.MyColorPoint.ColorCoordinate;
 import com.example.labviewer.MyColorPoint.ColorSpace;
+import com.example.labviewer.MyColorPoint.DrawType;
 
 public class MyColorPointGenerator {
 
@@ -15,18 +14,18 @@ public class MyColorPointGenerator {
 	private int mAlpha = 100;
 
 	//DemoCase
-	private enum DemoCase{
-		noDemo, demo729, demo4913
+	public enum DemoCase{
+		noDemo, demo729, demo729_sRGB, demo4913
 	}
 	//DemoCase設定
 	//DemoCase mDemoCase = DemoCase.noDemo;
 	DemoCase mDemoCase = DemoCase.demo729;
 	//DemoCase mDemoCase = DemoCase.demo4913;
 
-	public MyColorPointGenerator(int alpha){
+	public MyColorPointGenerator(int alpha, DemoCase democace){
 
 		mAlpha = alpha;
-
+		mDemoCase = democace;
 		//demo用
 		if(mDemoCase != DemoCase.noDemo){
 			demoGenerator();
@@ -40,9 +39,10 @@ public class MyColorPointGenerator {
 		}
 	}
 	public void setAlpha(int alpha){
-		Log.v("setAlpha called", "setAlpha1 called at MyColorPointGenerator");
+		//Log.v("setAlpha called", "setAlpha1 called at MyColorPointGenerator");
 		switch(mDemoCase){
 		case demo729:
+		case demo729_sRGB:
 			for(int i = 0;i < 729;i++){
 				mDemo729[i].setAlpha(alpha);
 			}
@@ -61,6 +61,7 @@ public class MyColorPointGenerator {
 	private void demoDraw(GL10 gl) {
 		switch(mDemoCase){
 		case demo729:
+		case demo729_sRGB:
 			for(int i = 0;i < 729;i++){
 				mDemo729[i].draw(gl);
 			}
@@ -87,7 +88,16 @@ public class MyColorPointGenerator {
 			b = setDemo729_B();
 			for(int i = 0;i < 729;i++){
 				//mDemo729[i] = new MyCube(r[i]/255f, g[i]/255f, b[i]/255f, 0.02f, r[i]/2.55f, g[i]/2.55f, b[i]/2.55f);
-				mDemo729[i] = new MyColorPoint(ColorCoordinate.RGB, r[i]/255f, g[i]/255f, b[i]/255f, mAlpha, ColorSpace.Adobe_RGB);
+				mDemo729[i] = new MyColorPoint(ColorCoordinate.RGB, r[i]/255f, g[i]/255f, b[i]/255f, mAlpha, ColorSpace.Adobe_RGB, DrawType.Cube);
+			}
+			break;
+		case demo729_sRGB:
+			r = setDemo729_R();
+			g = setDemo729_G();
+			b = setDemo729_B();
+			for(int i = 0;i < 729;i++){
+				//mDemo729[i] = new MyCube(r[i]/255f, g[i]/255f, b[i]/255f, 0.02f, r[i]/2.55f, g[i]/2.55f, b[i]/2.55f);
+				mDemo729[i] = new MyColorPoint(ColorCoordinate.RGB, r[i]/255f, g[i]/255f, b[i]/255f, mAlpha, ColorSpace.sRGB, DrawType.Triangle);
 			}
 			break;
 		case demo4913:

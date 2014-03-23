@@ -5,15 +5,14 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
-import android.util.Log;
 
+import com.example.labviewer.MyColorPointGenerator.DemoCase;
 public class MyRenderer implements Renderer {
 
 	private float mWidth;
     private float mHeight;
-    private float zNear =1.0f;
+    private float zNear =0.5f;
     private float zFar = 1000.0f;
-    private int mAlpha1 = 100;
 
     // 移動方向のベクトル成分
     private float posX = 0.0f, posY = 0.0f, posZ = 0.0f;
@@ -32,14 +31,17 @@ public class MyRenderer implements Renderer {
     MyCube myCube2 = new MyCube(0.5f, 0.0f, 0.0f, 0.5f, 00f, 70f, 70f, 100);
     MyJpcColor myJpcColor  = new MyJpcColor();
 
-    MyColorPointGenerator mColorPointGenerator1 = new MyColorPointGenerator(100);
-
+    MyColorPointGenerator mColorPointGenerator1 = new MyColorPointGenerator(100, DemoCase.demo729);
+    MyColorPointGenerator mColorPointGenerator2 = new MyColorPointGenerator(100, DemoCase.demo729_sRGB);
 	private int size = 0x10000;
-	Triangle mTriangle  = new Triangle(0, size);
+	MyGLView myGLView;
+
+	public MyRenderer(MyGLView myGLView) {
+		this.myGLView =  myGLView;
+	}
 
 	@Override
 	public void onDrawFrame(GL10 gl) {
-		// TODO 自動生成されたメソッド・スタブ
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		gl.glMatrixMode(GL10.GL_PROJECTION);
 		gl.glLoadIdentity();
@@ -75,12 +77,16 @@ public class MyRenderer implements Renderer {
         //myCube2.draw(gl);
 		//myJpcColor.draw(gl);
 		//mTriangle.draw(gl);
+
+        mColorPointGenerator1.setAlpha(myGLView.getAlpha1());
         mColorPointGenerator1.draw(gl);
+
+        mColorPointGenerator2.setAlpha(myGLView.getAlpha2());
+        mColorPointGenerator2.draw(gl);
 	}
 
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
-		// TODO 自動生成されたメソッド・スタブ
 
 		mWidth = (float)width;
         mHeight = (float)height;
@@ -91,12 +97,10 @@ public class MyRenderer implements Renderer {
 	    gl.glMatrixMode(GL10.GL_PROJECTION);
 	    gl.glLoadIdentity();
 	    GLU.gluPerspective(gl, 45f,(float) mWidth / mHeight, 1f, 50f);
-
 	}
 
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-		// TODO 自動生成されたメソッド・スタブ
 		//アルファチャンネル機能(色設定時の透明度)ON
 		gl.glEnable(GL10.GL_ALPHA_TEST);
 		//下の色と上に書いた物の色の合成機能ON
@@ -133,17 +137,13 @@ public class MyRenderer implements Renderer {
 	    gl.glClearColor(1,1,1,1);//背景黒
 	    //スムースシェーディング：平面のポリゴンを曲面に見せかける処理。
 	    gl.glShadeModel(GL10.GL_SMOOTH);
-
-
 	}
 
 	public void addRotateY(float paramFloat1) {
-		// TODO 自動生成されたメソッド・スタブ
 		this.rotateY -= paramFloat1;
 	}
 
 	public void changeCameraPositionByZ(float scaleFactor) {
-		// TODO 自動生成されたメソッド・スタブ
 		float z = eyeZ;
 		z = z / scaleFactor;
 		// リニアクリップより小さくならないようにする。
@@ -152,16 +152,5 @@ public class MyRenderer implements Renderer {
 		// ファーアクリップより大きくならないようにする。
 		z = Math.min(z, zFar);
 		eyeZ = z;
-
 	}
-
-	public void setAlpha1(int progress) {
-		// TODO 自動生成されたメソッド・スタブ
-		Log.v("setAlpha called", "setAlpha1 called at MyRenderer");
-
-		mAlpha1 = progress;
-		mColorPointGenerator1.setAlpha(mAlpha1);
-		//mColorPointGenerator1 = new MyColorPointGenerator(mAlpha1);
-	}
-
 }
