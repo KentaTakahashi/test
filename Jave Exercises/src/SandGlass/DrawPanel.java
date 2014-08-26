@@ -15,23 +15,41 @@ public class DrawPanel extends JPanel implements ActionListener {
     static final int panelWidth  = 300;
     static final int panelHeight = 200;
 
-    Ball ball = new Ball(50);
+    static final int ballNum = 2;
+    Ball balls[] = new Ball[ballNum];
 
     public DrawPanel() {
         setBackground(Color.white);
         setPreferredSize(new Dimension(panelWidth, panelHeight));
+
+        for(int i = 0; i < ballNum; i++)
+        	balls[i] = new Ball(15);
     }
 
-    public void actionPerformed(ActionEvent event) {
-    	ball.M00();
+    public void actionPerformed(ActionEvent e) {
+    	for(int i = 0; i < ballNum; i++) {
+
+    		//衝突判定、衝突していれば、それぞれ反射
+    		//取りあえず総当りで実装、ＲＤＣアルゴリズムやセル分割法の方が高速
+    		for(int j = i + 1; j < ballNum; j++) {
+    			if(balls[i].hit(balls[j])) {
+    				balls[i].refrect(balls[j]);
+    				balls[j].refrect(balls[i]);
+    			}
+    		}
+
+    		//座標更新
+    		balls[i].update();
+    	}
         repaint();
     }
 
-    public void paintComponent(Graphics graphics) {
-        super.paintComponent(graphics);
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
 
-        Graphics2D g2D = (Graphics2D)graphics;
+        Graphics2D g2D = (Graphics2D)g;
         g2D.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
-        ball.M01(g2D);
+        for(Ball b: balls)
+        	 b.draw(g2D);
     }
 }
