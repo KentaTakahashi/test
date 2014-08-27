@@ -6,16 +6,17 @@ import java.awt.Graphics;
 public class Ball {
     public double X;
     public double Y;
-    public double v_X = Math.random();
+    public double v_X = 0;
     public double v_Y = 0;
     public double radius;//半径
     public double m;//重量
 
     private Color color;
 
-    static private double gravity = 0.05f;	//重力係数
-    static private double e  = 0.8f;			//ボール間での反発係数
-    static private double e2 = 0.95f;			//砂時計/ボール間での反発係数
+    static private double gravity = 0.01;//重力係数
+    static private double e  = 0.5;		//ボール間での反発係数
+    static private double e2 = 0.95;		//砂時計/ボール間での反発係数
+    static private double e3 = 0.5;		//底面/ボール間での反発係数
 
 
 
@@ -23,7 +24,7 @@ public class Ball {
         this.radius = radius;
         this.m = radius * radius;//取りあえず、質量は面積に比例
 
-        X = Math.random() * (DrawPanel.panelWidth  - 2 * radius);
+        X = Math.random() * (DrawPanel.panelWidth - 2 * radius);
         //Y = Math.random() * (DrawPanel.panelHeight - 2 * radius);
         Y = 0;
 
@@ -37,12 +38,8 @@ public class Ball {
     }
 
 	public boolean hit(Ball target) {
-		if((X - target.X) * (X - target.X) + (Y - target.Y) * (Y - target.Y)
-				<= (radius + target.radius) * (radius + target.radius)) {
-			//color = new Color((float)Math.random(), (float)Math.random(), (float)Math.random(), 1);
-			return true;
-		}
-		return false;
+		return(X - target.X) * (X - target.X) + (Y - target.Y) * (Y - target.Y)
+				<= (radius + target.radius) * (radius + target.radius);
 	}
 
 	public void refrect(Ball target) {
@@ -102,40 +99,63 @@ public class Ball {
 	public void update() {
 		double width  = DrawPanel.panelWidth;
 		double height = DrawPanel.panelHeight;
-		double wheel  = DrawPanel.wheel;
-
-
-		// 壁に衝突すれば反射
-        if (((X <= 0) && (v_X < 0)) || (X >= (width  - 2*radius) &&  (v_X > 0)))
-        	v_X = -v_X * e2;
-        if (((Y <= 0) && (v_Y < 0)) || (Y >= (height - 2*radius) &&  (v_Y > 0)))
-        	v_Y = -v_Y * e2;
-
-
-        //砂時計左上
-        if(X <= (width - wheel)/2 && Y <= height/2 && X < Y) {
-        	v_X = v_Y * e2;
-        	v_Y = v_X * e2;
-        }
-      //砂時計右上
-        if(X >= (width + wheel)/2 && Y <= height/2 && width - X < Y) {
-        	v_X = -v_Y * e2;
-        	v_Y = -v_X * e2;
-        }
-
+		double wheel  = DrawPanel.ballRadius;
 
 		//重力加算
 		v_Y += gravity;
+		//砂時計左上
+        if(X <= (width - wheel)/2 && Y <= height/2 && X <= Y) {
+        	X = Y;
+        	if(v_X <  v_Y) {
+            	v_X = v_Y * e2;
+            	v_Y = v_X * e2;
+        	}
+        }
+        //砂時計右上
+        if(X >= (width + wheel)/2 && Y <= height/2 && width - X < Y) {
+        	X = width - Y;
+        	if(v_X > -v_Y) {
+            	v_X = -v_Y * e2;
+            	v_Y = -v_X * e2;
+        	}
+        }
+        //砂時計左下
+        if(X <= (width - wheel)/2 && Y >  height/2 && X < height - Y) {
+        	X = height - Y;
+        	if((v_X < -v_Y)) {
+            	v_X = -v_Y * e2;
+            	v_Y = -v_X * e2;
+        	}
+        }
+        //砂時計右下
+        if(X >= (width + wheel)/2 && Y >  height/2 && width - X <  height - Y) {
+        	X = width - height + Y;
+        	if(v_X >  v_Y) {
+            	v_X = v_Y * e2;
+            	v_Y = v_X * e2;
+        	}
+        }
+
+		// 壁に衝突すれば反射
+        if (((X < 0) && (v_X < 0)) || (X >= (width  - 2 * radius) &&  (v_X > 0)))
+        	v_X = -v_X * e2;
+
+        //蓋より上の座標になったら0にリセット
+        if (Y < 0) {
+        	Y = 0;
+        	//速度ベクトルが上方だったら反発係数をかけて下方に変更
+        	if(v_Y < 0) v_Y = -v_Y * e2;
+        }
+
+        //底より下だった場合、座標を底にリセット
+        if (Y >= (height - 2 * radius)) {
+        	Y = height - 2*radius;
+        	//速度ベクトルが下方だったら反発係数をかけて上方に変更
+        	if(v_Y > 0) v_Y = -v_Y * e3;
+        }
 
 		//座標更新
         X += v_X;
         Y += v_Y;
-
-        if(Y > height - 2*radius)
-        	Y = height - 2*radius;
-        //System.out.println(Y);
-
-        //Calendar now = Calendar.getInstance(); //インスタンス化
-        //System.out.println(now.get(now.MILLISECOND));
 	}
 }
