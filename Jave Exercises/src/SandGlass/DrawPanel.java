@@ -12,10 +12,11 @@ import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 
 public class DrawPanel extends JPanel implements ActionListener {
-    static final int panelWidth  = 300;
-    static final int panelHeight = 200;
+    static final int panelWidth  = 410;
+    static final int panelHeight = 400;
+    static final int wheel  	 =  10;//砂時計のくびれ箇所の直径
 
-    static final int ballNum = 2;
+    static final int ballNum = 200;
     Ball balls[] = new Ball[ballNum];
 
     public DrawPanel() {
@@ -23,7 +24,7 @@ public class DrawPanel extends JPanel implements ActionListener {
         setPreferredSize(new Dimension(panelWidth, panelHeight));
 
         for(int i = 0; i < ballNum; i++)
-        	balls[i] = new Ball(15);
+        	balls[i] = new Ball(5 * Math.random() + 5);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -34,7 +35,7 @@ public class DrawPanel extends JPanel implements ActionListener {
     		for(int j = i + 1; j < ballNum; j++) {
     			if(balls[i].hit(balls[j])) {
     				balls[i].refrect(balls[j]);
-    				balls[j].refrect(balls[i]);
+    				//balls[j].refrect(balls[i]);//反発計算は片方のインスタンスで処理する
     			}
     		}
 

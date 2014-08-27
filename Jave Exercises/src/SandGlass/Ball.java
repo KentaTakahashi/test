@@ -4,22 +4,28 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class Ball {
-    public float X;
-    public float Y;
-    public float radius;//半径
-    public float v_X = (float)Math.random();
-    public float v_Y = 0;
+    public double X;
+    public double Y;
+    public double v_X = Math.random();
+    public double v_Y = 0;
+    public double radius;//半径
+    public double m;//重量
+
     private Color color;
 
-    static private float gravity = 0.1f;	//重力係数
-    static private float CoR = 0.8f;		//反発係数
+    static private double gravity = 0.05f;	//重力係数
+    static private double e  = 0.8f;			//ボール間での反発係数
+    static private double e2 = 0.95f;			//砂時計/ボール間での反発係数
 
 
-    Ball(int radius) {
+
+    Ball(double radius) {
         this.radius = radius;
+        this.m = radius * radius;//取りあえず、質量は面積に比例
 
-        X = (int)(Math.random() * (DrawPanel.panelWidth  - 2*radius));
-        Y = (int)(Math.random() * (DrawPanel.panelHeight - 2*radius));
+        X = Math.random() * (DrawPanel.panelWidth  - 2 * radius);
+        //Y = Math.random() * (DrawPanel.panelHeight - 2 * radius);
+        Y = 0;
 
         color = new Color((float)Math.random(), (float)Math.random(), (float)Math.random(), 1);
     }
@@ -33,33 +39,100 @@ public class Ball {
 	public boolean hit(Ball target) {
 		if((X - target.X) * (X - target.X) + (Y - target.Y) * (Y - target.Y)
 				<= (radius + target.radius) * (radius + target.radius)) {
-			color = new Color((float)Math.random(), (float)Math.random(), (float)Math.random(), 1);
+			//color = new Color((float)Math.random(), (float)Math.random(), (float)Math.random(), 1);
+			return true;
 		}
 		return false;
 	}
 
 	public void refrect(Ball target) {
 
+		//参考URL　http://hakuhin.jp/as/collide.html
+
+		//めり込み補正、重複した座標を補正する
+		double vx = (X - target.X);
+		double vy = (Y - target.Y);
+		double len = Math.sqrt(vx * vx + vy * vy);
+		double distance = (radius + target.radius) - len;
+
+		if(len > 0)	len = 1 / len;
+		vx *= len;
+		vy *= len;
+
+		distance /= 2.0;
+		X += vx * distance;
+		Y += vy * distance;
+		target.X -= vx * distance;
+		target.Y -= vy * distance;
+
+		//速度ベクトルを重心方向と垂直な方向に分離する
+		double t;
+		vx = (target.X - X);
+		vy = (target.Y - Y);
+
+		t = -(vx * v_X + vy * v_Y) / (vx * vx + vy * vy);
+		double arx = v_X + vx * t;
+		double ary = v_Y + vy * t;
+
+		t = -(-vy * v_X + vx * v_Y) / (vy * vy + vx * vx);
+		double amx = v_X - vy * t;
+		double amy = v_Y + vx * t;
+
+		t = -(vx * target.v_X + vy * target.v_Y) / (vx * vx + vy * vy);
+		double brx = target.v_X + vx * t;
+		double bry = target.v_Y + vy * t;
+
+		t = -(-vy * target.v_X + vx * target.v_Y) / (vy * vy + vx * vx);
+		double bmx = target.v_X - vy * t;
+		double bmy = target.v_Y + vx * t;
+
+		//x 方向と y 方向それぞれの衝突後の速度を計算する
+		double av_X = (m * amx + target.m * bmx + bmx * e * target.m - amx * e * target.m) / (m + target.m);
+		double bv_X = - e * (bmx - amx) + av_X;
+		double av_Y = (m * amy + target.m * bmy + bmy * e * target.m - amy * e * target.m) / (m + target.m);
+		double bv_Y = - e * (bmy - amy) + av_Y;
+
+		//回転運動を発生させるベクトルを加算して衝突後の速度を計算
+		v_X = av_X + arx;
+		v_Y = av_Y + ary;
+		target.v_X = bv_X + brx;
+		target.v_Y = bv_Y + bry;
 	}
 
 	public void update() {
+		double width  = DrawPanel.panelWidth;
+		double height = DrawPanel.panelHeight;
+		double wheel  = DrawPanel.wheel;
+
+
 		// 壁に衝突すれば反射
-        if (((X <= 0) &&  (v_X < 0)) ||
-        		(X >= (DrawPanel.panelWidth - 2*radius) &&  (v_X > 0))) {
-        	v_X = -v_X * CoR;
+        if (((X <= 0) && (v_X < 0)) || (X >= (width  - 2*radius) &&  (v_X > 0)))
+        	v_X = -v_X * e2;
+        if (((Y <= 0) && (v_Y < 0)) || (Y >= (height - 2*radius) &&  (v_Y > 0)))
+        	v_Y = -v_Y * e2;
+
+
+        //砂時計左上
+        if(X <= (width - wheel)/2 && Y <= height/2 && X < Y) {
+        	v_X = v_Y * e2;
+        	v_Y = v_X * e2;
         }
-        if (((Y <= 0) &&  (v_Y < 0)) ||
-        		(Y >= (DrawPanel.panelHeight - 2*radius) &&  (v_Y > 0))) {
-        	v_Y = -v_Y * CoR;
+      //砂時計右上
+        if(X >= (width + wheel)/2 && Y <= height/2 && width - X < Y) {
+        	v_X = -v_Y * e2;
+        	v_Y = -v_X * e2;
         }
-		//重力
+
+
+		//重力加算
 		v_Y += gravity;
 
+		//座標更新
         X += v_X;
         Y += v_Y;
 
-        if(Y > DrawPanel.panelHeight - 2*radius)
-        	Y = DrawPanel.panelHeight - 2*radius;
+        if(Y > height - 2*radius)
+        	Y = height - 2*radius;
         //System.out.println(Y);
 
         //Calendar now = Calendar.getInstance(); //インスタンス化
