@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 public class BallReflection extends JFrame {
 
     public BallReflection() {
-        DrawPanel dp = new DrawPanel();
+        DrawPanel dp = new DrawPanel(this);
         add(dp);
     }
 

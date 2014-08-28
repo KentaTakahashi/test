@@ -13,12 +13,10 @@ public class Ball {
 
     private Color color;
 
-    static private double gravity = 0.01;//重力係数
-    static private double e  = 0.5;		//ボール間での反発係数
-    static private double e2 = 0.95;		//砂時計/ボール間での反発係数
-    static private double e3 = 0.5;		//底面/ボール間での反発係数
-
-
+    static double gravity;//重力係数
+    static double e;		//ボール間での反発係数
+    static double e2;		//砂時計/ボール間での反発係数
+    static double e3;		//底面/ボール間での反発係数
 
     Ball(double radius) {
         this.radius = radius;
@@ -30,13 +28,6 @@ public class Ball {
 
         color = new Color((float)Math.random(), (float)Math.random(), (float)Math.random(), 1);
     }
-
-    void draw(Graphics g) {
-
-        g.setColor(color);
-        g.fillOval((int)X, (int)Y, (int)(2*radius), (int)(2*radius));
-    }
-
 	public boolean hit(Ball target) {
 		return(X - target.X) * (X - target.X) + (Y - target.Y) * (Y - target.Y)
 				<= (radius + target.radius) * (radius + target.radius);
@@ -103,8 +94,20 @@ public class Ball {
 
 		//重力加算
 		v_Y += gravity;
+
+        // 壁に衝突すれば反射
+        if (((X < 0) && (v_X < 0)) || (X >= (width  - 2 * radius) &&  (v_X > 0)))
+            v_X = -v_X * e2;
+
+        //蓋より上の座標になったら0にリセット
+        if (Y < 0) {
+            Y = 0;
+            //速度ベクトルが上方だったら反発係数をかけて下方に変更
+            if(v_Y < 0) v_Y = -v_Y * e2;
+        }
+
 		//砂時計左上
-        if(X <= (width - wheel)/2 && Y <= height/2 && X <= Y) {
+        if(X <= (width - wheel)/2 && Y <= height/2 && X < Y) {
         	X = Y;
         	if(v_X <  v_Y) {
             	v_X = v_Y * e2;
@@ -136,17 +139,6 @@ public class Ball {
         	}
         }
 
-		// 壁に衝突すれば反射
-        if (((X < 0) && (v_X < 0)) || (X >= (width  - 2 * radius) &&  (v_X > 0)))
-        	v_X = -v_X * e2;
-
-        //蓋より上の座標になったら0にリセット
-        if (Y < 0) {
-        	Y = 0;
-        	//速度ベクトルが上方だったら反発係数をかけて下方に変更
-        	if(v_Y < 0) v_Y = -v_Y * e2;
-        }
-
         //底より下だった場合、座標を底にリセット
         if (Y >= (height - 2 * radius)) {
         	Y = height - 2*radius;
@@ -158,4 +150,12 @@ public class Ball {
         X += v_X;
         Y += v_Y;
 	}
+
+
+    void draw(Graphics g) {
+
+        g.setColor(color);
+        g.fillOval((int)(X), (int)(Y), (int)(2*radius), (int)(2*radius));
+    }
+
 }
